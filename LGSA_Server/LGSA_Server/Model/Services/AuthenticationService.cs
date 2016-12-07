@@ -10,7 +10,7 @@ using System.Windows;
 
 namespace LGSA.Model.Services
 {
-    public class AuthenticationService : IService<users_Authetication>
+    public class AuthenticationService : IDataService<users_Authetication>
     {
         private IUnitOfWorkFactory _factory;
         public AuthenticationService(IUnitOfWorkFactory factory)

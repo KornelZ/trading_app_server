@@ -10,28 +10,13 @@ using System.Windows;
 
 namespace LGSA.Model.Services
 {
-    public class ProductTypeService : IService<dic_Product_type>
+    public class ProductTypeService : IDictionaryService<dic_Product_type>
     {
         private IUnitOfWorkFactory _factory;
         public ProductTypeService(IUnitOfWorkFactory factory)
         {
             _factory = factory;
         }
-        public Task<bool> Add(dic_Product_type entity)
-        {
-            return null;
-        }
-
-        public Task<bool> Delete(dic_Product_type entity)
-        {
-            return null;
-        }
-
-        public Task<dic_Product_type> GetById(int id)
-        {
-            return null;
-        }
-
         public async Task<IEnumerable<dic_Product_type>> GetData(Expression<Func<dic_Product_type, bool>> filter)
         {
             using (var unitOfWork = _factory.CreateUnitOfWork())
@@ -48,11 +33,6 @@ namespace LGSA.Model.Services
             }
 
             return null;
-        }
-
-        public Task<bool> Update(dic_Product_type entity)
-        {
-            throw new NotImplementedException();
         }
     }
 }

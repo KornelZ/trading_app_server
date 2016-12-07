@@ -10,7 +10,7 @@ using System.Windows;
 
 namespace LGSA.Model.Services
 {
-    public class ProductService : IService<product>
+    public class ProductService : IDataService<product>
     {
         private IUnitOfWorkFactory _factory;
         public ProductService(IUnitOfWorkFactory factory)

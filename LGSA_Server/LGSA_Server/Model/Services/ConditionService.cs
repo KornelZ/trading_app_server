@@ -10,22 +10,12 @@ using System.Windows;
 
 namespace LGSA.Model.Services
 {
-    public class ConditionService : IService<dic_condition>
+    public class ConditionService : IDictionaryService<dic_condition>
     {
         private IUnitOfWorkFactory _factory;
         public ConditionService(IUnitOfWorkFactory factory)
         {
             _factory = factory;
-        }
-
-        public Task<bool> Add(dic_condition entity)
-        {
-            return null;
-        }
-
-        public Task<bool> Delete(dic_condition entity)
-        {
-            return null;
         }
 
         public async Task<IEnumerable<dic_condition>> GetData(Expression<Func<dic_condition, bool>> filter)
@@ -43,16 +33,6 @@ namespace LGSA.Model.Services
                 }
             }
 
-            return null;
-        }
-
-        public Task<bool> Update(dic_condition entity)
-        {
-            return null;
-        }
-
-        Task<dic_condition> IService<dic_condition>.GetById(int id)
-        {
             return null;
         }
     }

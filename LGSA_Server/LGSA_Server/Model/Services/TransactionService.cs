@@ -11,7 +11,14 @@ using System.Windows;
 
 namespace LGSA.Model.Services
 {
-    public class TransactionService : IService<transactions>
+
+    public interface ITransactionService : IDataService<transactions>
+    {
+        Task<bool> AcceptSellTransaction(sell_Offer sellOffer, buy_Offer buyOffer, product buyerProduct, product sellerProduct);
+        Task<bool> AcceptBuyTransaction(sell_Offer sellOffer, buy_Offer buyOffer, product buyerProduct, product sellerProduct);
+
+    }
+    public class TransactionService : ITransactionService
     {
         private IUnitOfWorkFactory _factory;
         public TransactionService(IUnitOfWorkFactory factory)

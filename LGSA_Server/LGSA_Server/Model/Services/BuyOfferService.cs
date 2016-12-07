@@ -10,7 +10,7 @@ using System.Windows;
 
 namespace LGSA.Model.Services
 {
-    public class BuyOfferService : IService<buy_Offer>
+    public class BuyOfferService : IDataService<buy_Offer>
     {
         private IUnitOfWorkFactory _factory;
         public BuyOfferService(IUnitOfWorkFactory factory)
