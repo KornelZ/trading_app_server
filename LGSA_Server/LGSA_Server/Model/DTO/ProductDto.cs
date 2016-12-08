@@ -19,8 +19,9 @@ namespace LGSA_Server.Model.DTO
         public int? GenreId { get; set; }
         public int? ProductTypeId { get; set; }
         public int? ConditionId { get; set; }
-        public DateTime UpdateDate { get; set; }
-        public int UpdateWho { get; set; }
+        public ConditionDto Condition { get; set; }
+        public GenreDto Genre { get; set; }
+        public ProductTypeDto ProductType { get; set; }
 
     }
 }

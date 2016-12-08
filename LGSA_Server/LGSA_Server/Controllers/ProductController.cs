@@ -19,20 +19,26 @@ namespace LGSA_Server.Controllers
 {
     public class ProductController : ApiController
     {
-        private IDataService<product> service;
-        private IAssembler<product, ProductDto> assembler;
+        private IDataService<product> _service;
+        private ITwoWayAssembler<product, ProductDto> _assembler;
+
 
         public ProductController(IUnitOfWorkFactory factory)
         {
-            service = new ProductService(factory);
-            assembler = new ProductAssembler();
+            _service = new ProductService(factory);
+            _assembler = new ProductAssembler(new ConditionAssembler(),
+                                                     new GenreAssembler(),
+                                                     new ProductTypeAssembler());
+
         }
         // GET: api/Product
         [HttpGet]
         public async Task<IHttpActionResult> Get()
         {
-            var product = await service.GetData(null);
-            return Ok(assembler.EntityToDto(product));
+            var products = await _service.GetData(null);
+            var dto = _assembler.EntityToDto(products);
+
+            return Ok(_assembler.EntityToDto(products));
         }
         [HttpPost]
         public async Task<IHttpActionResult> Post([FromBody] ProductDto dto)
@@ -41,9 +47,9 @@ namespace LGSA_Server.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var product = assembler.DtoToEntity(dto);
+            var product = _assembler.DtoToEntity(dto);
 
-            var result = await service.Add(product);
+            var result = await _service.Add(product);
 
             if(result == false)
             {
@@ -54,9 +60,9 @@ namespace LGSA_Server.Controllers
         [HttpDelete]
         public async Task<IHttpActionResult> Delete([FromBody] ProductDto dto)
         {
-            var product = assembler.DtoToEntity(dto);
+            var product = _assembler.DtoToEntity(dto);
 
-            var result = await service.Delete(product);
+            var result = await _service.Delete(product);
 
             if(result == false)
             {

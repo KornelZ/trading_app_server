@@ -6,8 +6,19 @@ using System.Web;
 
 namespace LGSA_Server.Model.Assemblers
 {
-    public class ProductAssembler : IAssembler<product, ProductDto>
+    public class ProductAssembler : ITwoWayAssembler<product, ProductDto>
     {
+        private IAssembler<dic_condition, ConditionDto> _conditionAssembler;
+        private IAssembler<dic_Genre, GenreDto> _genreAssembler;
+        private IAssembler<dic_Product_type, ProductTypeDto> _productTypeAssembler;
+        public ProductAssembler(IAssembler<dic_condition, ConditionDto> conditionAssembler,
+                                IAssembler<dic_Genre, GenreDto> genreAssembler,
+                                IAssembler<dic_Product_type, ProductTypeDto> productTypeAssembler)
+        {
+            _conditionAssembler = conditionAssembler;
+            _genreAssembler = genreAssembler;
+            _productTypeAssembler = productTypeAssembler;
+        }
         public IEnumerable<product> DtoToEntity(IEnumerable<ProductDto> dto)
         {
             return dto.Select(p => DtoToEntity(p));
@@ -22,8 +33,8 @@ namespace LGSA_Server.Model.Assemblers
                 product_owner = dto.ProductOwner,
                 sold_copies = dto.SoldCopies,
                 stock = dto.Stock,
-                Update_Date = dto.UpdateDate,
-                Update_Who = dto.UpdateWho,
+                Update_Date = DateTime.Now,
+                Update_Who = dto.Id,
                 condition_id = dto.ConditionId,
                 genre_id = dto.GenreId,
                 product_type_id = dto.ProductTypeId
@@ -37,6 +48,10 @@ namespace LGSA_Server.Model.Assemblers
 
         public ProductDto EntityToDto(product entity)
         {
+            if (entity == null)
+            {
+                return null;
+            }
             return new ProductDto()
             {
                 Id = entity.ID,
@@ -44,11 +59,12 @@ namespace LGSA_Server.Model.Assemblers
                 ProductOwner = entity.product_owner,
                 SoldCopies = entity.sold_copies,
                 Stock = entity.stock,
-                UpdateDate = entity.Update_Date,
-                UpdateWho = entity.Update_Who,
                 ConditionId = entity.condition_id,
                 GenreId = entity.genre_id,
-                ProductTypeId = entity.product_type_id
+                ProductTypeId = entity.product_type_id,
+                Condition = _conditionAssembler.EntityToDto(entity.dic_condition),
+                Genre = _genreAssembler.EntityToDto(entity.dic_Genre),
+                ProductType = _productTypeAssembler.EntityToDto(entity.dic_Product_type)
             };
         }
     }
