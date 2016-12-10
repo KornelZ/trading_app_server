@@ -34,7 +34,7 @@ namespace LGSA_Server.Model.Assemblers
                 sold_copies = dto.SoldCopies,
                 stock = dto.Stock,
                 Update_Date = DateTime.Now,
-                Update_Who = dto.Id,
+                Update_Who = dto.ProductOwner,
                 condition_id = dto.ConditionId,
                 genre_id = dto.GenreId,
                 product_type_id = dto.ProductTypeId

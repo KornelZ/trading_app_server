@@ -17,6 +17,7 @@ using LGSA_Server.Model.Assemblers;
 
 namespace LGSA_Server.Controllers
 {
+    [Authentication.Authentication]
     public class ProductController : ApiController
     {
         private IDataService<product> _service;
@@ -57,12 +58,16 @@ namespace LGSA_Server.Controllers
             }
             return Ok();
         }
-        [HttpDelete]
-        public async Task<IHttpActionResult> Delete([FromBody] ProductDto dto)
+        [HttpPut]
+        public async Task<IHttpActionResult> Put([FromBody] ProductDto dto)
         {
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest(ModelState);
+            }
             var product = _assembler.DtoToEntity(dto);
 
-            var result = await _service.Delete(product);
+            var result = await _service.Update(product);
 
             if(result == false)
             {

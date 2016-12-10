@@ -127,6 +127,10 @@
   <ItemGroup>
     <Compile Include="App_Start\UnityResolver.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Authentication\AuthenticationAttribute.cs" />
+    <Compile Include="Authentication\ChallengeOnUnAuthorizedResult.cs" />
+    <Compile Include="Authentication\ErrorResult.cs" />
+    <Compile Include="Authentication\UserPrincipal.cs" />
     <Compile Include="Controllers\DictionaryController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Global.asax.cs">
@@ -157,6 +161,7 @@
     </Compile>
     <Compile Include="Model\DTO\ConditionDto.cs" />
     <Compile Include="Model\DTO\DictionaryDto.cs" />
+    <Compile Include="Model\DTO\FilterDto.cs" />
     <Compile Include="Model\DTO\GenreDto.cs" />
     <Compile Include="Model\DTO\ProductDto.cs" />
     <Compile Include="Model\DTO\ProductTypeDto.cs" />
@@ -235,9 +240,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Authentication\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
