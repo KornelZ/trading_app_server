@@ -114,8 +114,8 @@
     <Content Include="Global.asax" />
     <Content Include="Model\MainDatabaseModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>MainDatabaseModel.Context.cs</LastGenOutput>
       <DependentUpon>MainDatabaseModel.edmx</DependentUpon>
+      <LastGenOutput>MainDatabaseModel.Context.cs</LastGenOutput>
     </Content>
     <Content Include="Model\MainDatabaseModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -174,6 +174,7 @@
     <Compile Include="Model\DTO\ProductDto.cs" />
     <Compile Include="Model\DTO\ProductTypeDto.cs" />
     <Compile Include="Model\DTO\SellOfferDto.cs" />
+    <Compile Include="Model\DTO\TransactionDto.cs" />
     <Compile Include="Model\Enums\TransactionState.cs" />
     <Compile Include="Model\MainDatabaseModel.Context.cs">
       <AutoGen>True</AutoGen>

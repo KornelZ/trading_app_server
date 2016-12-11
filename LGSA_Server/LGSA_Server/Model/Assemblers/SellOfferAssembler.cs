@@ -31,7 +31,8 @@ namespace LGSA_Server.Model.Assemblers
                 price = (double?)dto.Price,
                 buyed_copies = 0,
                 Update_Who = dto.SellerId,
-                Update_Date = DateTime.Now
+                Update_Date = DateTime.Now,
+                product = _assembler.DtoToEntity(dto.Product)
             };
         }
 

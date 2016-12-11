@@ -26,6 +26,10 @@ namespace LGSA_Server.Model.Assemblers
 
         public product DtoToEntity(ProductDto dto)
         {
+            if(dto == null)
+            {
+                return null;
+            }
             return new product()
             {
                 ID = dto.Id,

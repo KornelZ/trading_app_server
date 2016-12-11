@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="mainDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="MainDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="buy_Offer">
           <Key>
             <PropertyRef Name="ID" />
@@ -114,6 +114,7 @@
           <Property Name="status_id" Type="int" Nullable="false" />
           <Property Name="Update_Date" Type="datetime" Nullable="false" />
           <Property Name="Update_Who" Type="int" Nullable="false" />
+          <Property Name="Rating" Type="int" />
         </EntityType>
         <EntityType Name="UserAddress">
           <Key>
@@ -496,7 +497,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="mainDatabaseModelStoreContainer">
+        <EntityContainer Name="MainDatabaseModelStoreContainer">
           <EntitySet Name="buy_Offer" EntityType="Self.buy_Offer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="dic_condition" EntityType="Self.dic_condition" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="dic_Genre" EntityType="Self.dic_Genre" Schema="dbo" store:Type="Tables" />
@@ -630,7 +631,7 @@
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="mainDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="MainDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="buy_Offer">
           <Key>
             <PropertyRef Name="ID" />
@@ -768,6 +769,7 @@
           <Property Name="status_id" Type="Int32" Nullable="false" />
           <Property Name="Update_Date" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Update_Who" Type="Int32" Nullable="false" />
+          <Property Name="Rating" Type="Int32" />
           <NavigationProperty Name="buy_Offer" Relationship="Self.Transaction_buy_offer_fk" FromRole="transactions" ToRole="buy_Offer" />
           <NavigationProperty Name="dic_Transaction_status" Relationship="Self.Transaction_status_id_fk" FromRole="transactions" ToRole="dic_Transaction_status" />
           <NavigationProperty Name="sell_Offer" Relationship="Self.Transaction_sell_offer_fk" FromRole="transactions" ToRole="sell_Offer" />
@@ -1315,9 +1317,9 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="mainDatabaseModelStoreContainer" CdmEntityContainer="MainDatabaseEntities">
+        <EntityContainerMapping StorageEntityContainer="MainDatabaseModelStoreContainer" CdmEntityContainer="MainDatabaseEntities">
           <EntitySetMapping Name="buy_Offer">
-            <EntityTypeMapping TypeName="mainDatabaseModel.buy_Offer">
+            <EntityTypeMapping TypeName="MainDatabaseModel.buy_Offer">
               <MappingFragment StoreEntitySet="buy_Offer">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="buyer_id" ColumnName="buyer_id" />
@@ -1334,7 +1336,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="dic_condition">
-            <EntityTypeMapping TypeName="mainDatabaseModel.dic_condition">
+            <EntityTypeMapping TypeName="MainDatabaseModel.dic_condition">
               <MappingFragment StoreEntitySet="dic_condition">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="name" ColumnName="name" />
@@ -1344,7 +1346,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="dic_Genre">
-            <EntityTypeMapping TypeName="mainDatabaseModel.dic_Genre">
+            <EntityTypeMapping TypeName="MainDatabaseModel.dic_Genre">
               <MappingFragment StoreEntitySet="dic_Genre">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="name" ColumnName="name" />
@@ -1355,7 +1357,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="dic_Offer_status">
-            <EntityTypeMapping TypeName="mainDatabaseModel.dic_Offer_status">
+            <EntityTypeMapping TypeName="MainDatabaseModel.dic_Offer_status">
               <MappingFragment StoreEntitySet="dic_Offer_status">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="name" ColumnName="name" />
@@ -1366,7 +1368,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="dic_Product_type">
-            <EntityTypeMapping TypeName="mainDatabaseModel.dic_Product_type">
+            <EntityTypeMapping TypeName="MainDatabaseModel.dic_Product_type">
               <MappingFragment StoreEntitySet="dic_Product_type">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="name" ColumnName="name" />
@@ -1376,7 +1378,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="dic_Transaction_status">
-            <EntityTypeMapping TypeName="mainDatabaseModel.dic_Transaction_status">
+            <EntityTypeMapping TypeName="MainDatabaseModel.dic_Transaction_status">
               <MappingFragment StoreEntitySet="dic_Transaction_status">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="name" ColumnName="name" />
@@ -1387,7 +1389,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="product">
-            <EntityTypeMapping TypeName="mainDatabaseModel.product">
+            <EntityTypeMapping TypeName="MainDatabaseModel.product">
               <MappingFragment StoreEntitySet="product">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="product_owner" ColumnName="product_owner" />
@@ -1404,7 +1406,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="sell_Offer">
-            <EntityTypeMapping TypeName="mainDatabaseModel.sell_Offer">
+            <EntityTypeMapping TypeName="MainDatabaseModel.sell_Offer">
               <MappingFragment StoreEntitySet="sell_Offer">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="seller_id" ColumnName="seller_id" />
@@ -1421,7 +1423,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="transactions">
-            <EntityTypeMapping TypeName="mainDatabaseModel.transactions">
+            <EntityTypeMapping TypeName="MainDatabaseModel.transactions">
               <MappingFragment StoreEntitySet="transactions">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="seller_id" ColumnName="seller_id" />
@@ -1432,11 +1434,12 @@
                 <ScalarProperty Name="status_id" ColumnName="status_id" />
                 <ScalarProperty Name="Update_Date" ColumnName="Update_Date" />
                 <ScalarProperty Name="Update_Who" ColumnName="Update_Who" />
+                <ScalarProperty Name="Rating" ColumnName="Rating" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="UserAddress">
-            <EntityTypeMapping TypeName="mainDatabaseModel.UserAddress">
+            <EntityTypeMapping TypeName="MainDatabaseModel.UserAddress">
               <MappingFragment StoreEntitySet="UserAddress">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="City" ColumnName="City" />
@@ -1447,7 +1450,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="users">
-            <EntityTypeMapping TypeName="mainDatabaseModel.users">
+            <EntityTypeMapping TypeName="MainDatabaseModel.users">
               <MappingFragment StoreEntitySet="users">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Last_Name" ColumnName="Last_Name" />
@@ -1461,7 +1464,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="users_Authetication">
-            <EntityTypeMapping TypeName="mainDatabaseModel.users_Authetication">
+            <EntityTypeMapping TypeName="MainDatabaseModel.users_Authetication">
               <MappingFragment StoreEntitySet="users_Authetication">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="User_id" ColumnName="User_id" />

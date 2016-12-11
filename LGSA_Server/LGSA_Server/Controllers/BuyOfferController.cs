@@ -18,15 +18,42 @@ namespace LGSA_Server.Controllers
     [Authentication.Authentication]
     public class BuyOfferController : ApiController
     {
-        private ITwoWayAssembler<buy_Offer, BuyOfferDto> _assembler;
+        private ITwoWayAssembler<buy_Offer, BuyOfferDto> _buyAssembler;
+        private ITwoWayAssembler<sell_Offer, SellOfferDto> _sellAssembler;
         private IDataService<buy_Offer> _service;
+        private ITransactionService _transactionService;
         public BuyOfferController(IUnitOfWorkFactory factory)
         {
             _service = new BuyOfferService(factory);
 
-            _assembler = new BuyOfferAssembler(new ProductAssembler(new ConditionAssembler(),
+            _buyAssembler = new BuyOfferAssembler(new ProductAssembler(new ConditionAssembler(),
                                                                     new GenreAssembler(),
                                                                     new ProductTypeAssembler()));
+            _sellAssembler = new SellOfferAssembler(new ProductAssembler(new ConditionAssembler(),
+                                                                    new GenreAssembler(),
+                                                                    new ProductTypeAssembler()));
+            _transactionService = new TransactionService(factory);
+        }
+
+        [HttpPost, Route("AcceptBuyTransaction/")]
+        public async Task<IHttpActionResult> AcceptBuyTransaction([FromBody] TransactionDto dto)
+        {
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var sellOffer = _sellAssembler.DtoToEntity(dto.SellOffer);
+            var buyOffer = _buyAssembler.DtoToEntity(dto.BuyOffer);
+            var rating = dto.Rating;
+
+            var result = await _transactionService.AcceptBuyTransaction(sellOffer, buyOffer, rating);
+
+            if (result == false)
+            {
+                return BadRequest("Error occured during the transaction");
+            }
+            return Ok();
         }
 
         [HttpGet]
@@ -34,7 +61,7 @@ namespace LGSA_Server.Controllers
         {
             var id = (Thread.CurrentPrincipal as UserPrincipal).Id;
             var offers = await _service.GetData(filter.GetFilter(id));
-            var dto = _assembler.EntityToDto(offers);
+            var dto = _buyAssembler.EntityToDto(offers);
 
             return Ok(dto);
         }
@@ -46,14 +73,14 @@ namespace LGSA_Server.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var offer = _assembler.DtoToEntity(dto);
+            var offer = _buyAssembler.DtoToEntity(dto);
             var result = await _service.Add(offer);
             if(result == false)
             {
                 return BadRequest(ModelState);
             }
-
-            return Ok();
+            dto = _buyAssembler.EntityToDto(offer);
+            return Ok(dto);
         }
 
         [HttpPut]
@@ -63,7 +90,7 @@ namespace LGSA_Server.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var offer = _assembler.DtoToEntity(dto);
+            var offer = _buyAssembler.DtoToEntity(dto);
 
             var result = await _service.Update(offer);
 
@@ -71,7 +98,8 @@ namespace LGSA_Server.Controllers
             {
                 return NotFound();
             }
-            return Ok();
+            dto = _buyAssembler.EntityToDto(offer);
+            return Ok(dto);
         }
 
         [HttpDelete]
@@ -82,7 +110,7 @@ namespace LGSA_Server.Controllers
                 return BadRequest(ModelState);
             }
 
-            var offer = _assembler.DtoToEntity(dto);
+            var offer = _buyAssembler.DtoToEntity(dto);
 
             var result = await _service.Delete(offer);
 

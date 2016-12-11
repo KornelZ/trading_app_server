@@ -65,7 +65,9 @@ namespace LGSA_Server.Controllers
             {
                 return BadRequest(ModelState);
             }
-            return Ok();
+
+            dto = _assembler.EntityToDto(product);
+            return Ok(dto);
         }
         [HttpPut]
         public async Task<IHttpActionResult> Put([FromBody] ProductDto dto)
@@ -82,7 +84,8 @@ namespace LGSA_Server.Controllers
             {
                 return NotFound();
             }
-            return Ok();
+            dto = _assembler.EntityToDto(product);
+            return Ok(dto);
         }
 
     }

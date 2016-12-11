@@ -23,6 +23,7 @@ namespace LGSA_Server.Model
         public int status_id { get; set; }
         public System.DateTime Update_Date { get; set; }
         public int Update_Who { get; set; }
+        public Nullable<int> Rating { get; set; }
     
         public virtual buy_Offer buy_Offer { get; set; }
         public virtual dic_Transaction_status dic_Transaction_status { get; set; }

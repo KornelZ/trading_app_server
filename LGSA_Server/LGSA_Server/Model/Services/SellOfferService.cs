@@ -47,7 +47,7 @@ namespace LGSA.Model.Services
         {
             var productOffers = await unitOfWork.SellOfferRepository
                                         .GetData(offer => offer.seller_id == entity.seller_id
-                                        && offer.product_id == entity.product_id);
+                                        && offer.product_id == entity.product_id && offer.status_id != 3);
             var totalAmount = entity.amount + productOffers.Sum(offer => offer.amount);
             var product = await unitOfWork.ProductRepository.GetById(entity.product_id);
 
