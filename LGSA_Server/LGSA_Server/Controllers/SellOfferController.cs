@@ -42,6 +42,10 @@ namespace LGSA_Server.Controllers
             {
                 return BadRequest(ModelState);
             }
+            if (dto.BuyOffer.BuyerId != (Thread.CurrentPrincipal as UserPrincipal).Id)
+            {
+                return BadRequest("Internal error");
+            }
 
             var sellOffer = _sellAssembler.DtoToEntity(dto.SellOffer);
             var buyOffer = _buyAssembler.DtoToEntity(dto.BuyOffer);
@@ -73,6 +77,11 @@ namespace LGSA_Server.Controllers
             {
                 return BadRequest(ModelState);
             }
+            if (dto.SellerId != (Thread.CurrentPrincipal as UserPrincipal).Id)
+            {
+                return BadRequest("Internal error");
+            }
+
             var offer = _sellAssembler.DtoToEntity(dto);
 
             var result = await _service.Add(offer);
@@ -91,6 +100,11 @@ namespace LGSA_Server.Controllers
             {
                 return BadRequest(ModelState);
             }
+            if (dto.SellerId != (Thread.CurrentPrincipal as UserPrincipal).Id)
+            {
+                return BadRequest("Internal error");
+            }
+
             var offer = _sellAssembler.DtoToEntity(dto);
 
             var result = await _service.Update(offer);
@@ -109,6 +123,10 @@ namespace LGSA_Server.Controllers
             if (ModelState.IsValid == false)
             {
                 return BadRequest(ModelState);
+            }
+            if (dto.SellerId != (Thread.CurrentPrincipal as UserPrincipal).Id)
+            {
+                return BadRequest("Internal error");
             }
 
             var offer = _sellAssembler.DtoToEntity(dto);

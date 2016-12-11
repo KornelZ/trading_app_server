@@ -135,9 +135,12 @@
     <Compile Include="Controllers\DictionaryController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\SellOfferController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Model\Assemblers\AddressAssembler.cs" />
+    <Compile Include="Model\Assemblers\AuthenticationAssembler.cs" />
     <Compile Include="Model\Assemblers\BuyOfferAssembler.cs" />
     <Compile Include="Model\Assemblers\ConditionAssembler.cs" />
     <Compile Include="Model\Assemblers\GenreAssembler.cs" />
@@ -145,6 +148,7 @@
     <Compile Include="Model\Assemblers\ProductAssembler.cs" />
     <Compile Include="Model\Assemblers\ProductTypeAssembler.cs" />
     <Compile Include="Model\Assemblers\SellOfferAssembler.cs" />
+    <Compile Include="Model\Assemblers\UserAssembler.cs" />
     <Compile Include="Model\buy_Offer.cs">
       <DependentUpon>MainDatabaseModel.tt</DependentUpon>
     </Compile>
@@ -163,6 +167,8 @@
     <Compile Include="Model\dic_Transaction_status.cs">
       <DependentUpon>MainDatabaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\DTO\AddressDto.cs" />
+    <Compile Include="Model\DTO\AuthenticationDto.cs" />
     <Compile Include="Model\DTO\BuyOfferDto.cs" />
     <Compile Include="Model\DTO\ConditionDto.cs" />
     <Compile Include="Model\DTO\DictionaryDto.cs" />
@@ -175,6 +181,7 @@
     <Compile Include="Model\DTO\ProductTypeDto.cs" />
     <Compile Include="Model\DTO\SellOfferDto.cs" />
     <Compile Include="Model\DTO\TransactionDto.cs" />
+    <Compile Include="Model\DTO\UserDto.cs" />
     <Compile Include="Model\Enums\TransactionState.cs" />
     <Compile Include="Model\MainDatabaseModel.Context.cs">
       <AutoGen>True</AutoGen>

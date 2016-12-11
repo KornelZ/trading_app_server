@@ -15,11 +15,16 @@ namespace LGSA.Model.Repositories
         public AuthenticationRepository(DbContext context) : base(context)
         {
         }
-
+        //public override bool Update(users_Authetication entity)
+        //{
+        //    Attach(_context, entity);
+        //    return base.Update(entity);
+        //}
         public override users_Authetication Add(users_Authetication entity)
         {
             if(_context.Set<users_Authetication>()
                 .Include(users_Authetication => users_Authetication.users1)
+                .Include(users_Authetication => users_Authetication.users1.UserAddress1)
                 .Any(u => u.users1.First_Name == entity.users1.First_Name &&
                 u.users1.Last_Name == entity.users1.Last_Name))
             {
@@ -36,6 +41,22 @@ namespace LGSA.Model.Repositories
 
             return await _context.Set<users_Authetication>().Include(u => u.users1).Where(filter).ToListAsync();
         }
-
+        public static void Attach(DbContext ctx, users_Authetication entity)
+        {
+            if (entity.users1 != null)
+            {
+                if(entity.users1.ID != 0)
+                {
+                    ctx.Entry(entity.users1).State = EntityState.Modified;
+                }
+                if(entity.users1.UserAddress1 != null)
+                {
+                    if(entity.users1.UserAddress1.ID != 0)
+                    {
+                        ctx.Entry(entity.users1.UserAddress1).State = EntityState.Modified;
+                    }
+                }
+            }
+        }
     }
 }

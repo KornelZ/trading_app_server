@@ -52,6 +52,11 @@ namespace LGSA_Server.Controllers
             {
                 return BadRequest(ModelState);
             }
+            if (dto.ProductOwner != (Thread.CurrentPrincipal as UserPrincipal).Id)
+            {
+                return BadRequest("Internal error");
+            }
+
             var product = _assembler.DtoToEntity(dto);
 
             var prods = await _service.GetData(p => p.product_owner == product.product_owner && p.Name == product.Name);
@@ -76,6 +81,11 @@ namespace LGSA_Server.Controllers
             {
                 return BadRequest(ModelState);
             }
+            if (dto.ProductOwner != (Thread.CurrentPrincipal as UserPrincipal).Id)
+            {
+                return BadRequest("Internal error");
+            }
+
             var product = _assembler.DtoToEntity(dto);
 
             var result = await _service.Update(product);
