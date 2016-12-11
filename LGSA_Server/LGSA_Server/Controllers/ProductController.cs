@@ -14,6 +14,9 @@ using LGSA.Model.UnitOfWork;
 using System.Threading.Tasks;
 using LGSA_Server.Model.DTO;
 using LGSA_Server.Model.Assemblers;
+using System.Threading;
+using LGSA_Server.Authentication;
+using LGSA_Server.Model.DTO.Filters;
 
 namespace LGSA_Server.Controllers
 {
@@ -34,12 +37,13 @@ namespace LGSA_Server.Controllers
         }
         // GET: api/Product
         [HttpGet]
-        public async Task<IHttpActionResult> Get()
+        public async Task<IHttpActionResult> Get([FromUri] ProductFilterDto filter)
         {
-            var products = await _service.GetData(null);
+            var id = (Thread.CurrentPrincipal as UserPrincipal).Id;
+            var products = await _service.GetData(filter.GetFilter(id));
             var dto = _assembler.EntityToDto(products);
 
-            return Ok(_assembler.EntityToDto(products));
+            return Ok(dto);
         }
         [HttpPost]
         public async Task<IHttpActionResult> Post([FromBody] ProductDto dto)
@@ -50,6 +54,11 @@ namespace LGSA_Server.Controllers
             }
             var product = _assembler.DtoToEntity(dto);
 
+            var prods = await _service.GetData(p => p.product_owner == product.product_owner && p.Name == product.Name);
+            if(prods.Count() != 0)
+            {
+                return BadRequest("Product already Exists");
+            }
             var result = await _service.Add(product);
 
             if(result == false)

@@ -12,6 +12,7 @@ using System.Web.Http;
 
 namespace LGSA_Server.Controllers
 {
+    [Authentication.Authentication]
     public class DictionaryController : ApiController
     {
         private IDictionaryService<dic_condition> _conditionService;

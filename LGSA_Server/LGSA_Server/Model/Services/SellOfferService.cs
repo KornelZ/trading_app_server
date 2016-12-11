@@ -26,6 +26,11 @@ namespace LGSA.Model.Services
                 try
                 {
                     unitOfWork.StartTransaction();
+                    var canAdd = await CanAddOffer(entity, unitOfWork);
+                    if(canAdd == false)
+                    {
+                        return false;
+                    }
                     unitOfWork.SellOfferRepository.Add(entity);
                     await unitOfWork.Save();
                     unitOfWork.Commit();
@@ -38,7 +43,20 @@ namespace LGSA.Model.Services
             }
             return success;
         }
+        private async Task<bool> CanAddOffer(sell_Offer entity, IUnitOfWork unitOfWork)
+        {
+            var productOffers = await unitOfWork.SellOfferRepository
+                                        .GetData(offer => offer.seller_id == entity.seller_id
+                                        && offer.product_id == entity.product_id);
+            var totalAmount = entity.amount + productOffers.Sum(offer => offer.amount);
+            var product = await unitOfWork.ProductRepository.GetById(entity.product_id);
 
+            if(totalAmount > product?.stock)
+            {
+                return false;
+            }
+            return true;
+        }
         public async Task<bool> Delete(sell_Offer entity)
         {
             bool success = true;
