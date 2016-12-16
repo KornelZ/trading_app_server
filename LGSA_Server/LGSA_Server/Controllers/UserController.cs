@@ -93,12 +93,11 @@ namespace LGSA_Server.Controllers
 
             var user = _assembler.DtoToEntity(dto);
 
-            var result = await _service.Delete(user);
+            var result = await _service.Update(user);
             if(result == false)
             {
                 return BadRequest("Incorrect data");
             }
-            result = await _service.Add(user);
 
             dto = _assembler.EntityToDto(user);
             return Ok(dto);

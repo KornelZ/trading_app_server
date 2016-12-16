@@ -1,4 +1,5 @@
 ﻿using LGSA_Server.Model;
+using LinqKit;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -18,6 +19,7 @@ namespace LGSA.Model.Repositories
         public override buy_Offer Add(buy_Offer entity)
         {
             Attach(_context, entity);
+            _context.Set<buy_Offer>().Include(b => b.product);
             return base.Add(entity);
         }
         public override bool Update(buy_Offer entity)
@@ -34,6 +36,7 @@ namespace LGSA.Model.Repositories
                 .Include(buy_Offer => buy_Offer.product.dic_condition)
                 .Include(buy_Offer => buy_Offer.product.dic_Product_type)
                 .Include(buy_Offer => buy_Offer.product.dic_Genre)
+                .AsExpandable()
                 .Where(filter).ToListAsync();
         }
 

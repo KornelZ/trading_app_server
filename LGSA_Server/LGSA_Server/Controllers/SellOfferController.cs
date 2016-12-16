@@ -34,7 +34,7 @@ namespace LGSA_Server.Controllers
                                                                     new GenreAssembler(),
                                                                     new ProductTypeAssembler()));
         }
-
+        [Authentication.Authentication]
         [HttpPost, Route("AcceptSellTransaction/")]
         public async Task<IHttpActionResult> AcceptSellTransaction([FromBody] TransactionDto dto)
         {
@@ -59,7 +59,7 @@ namespace LGSA_Server.Controllers
             }
             return Ok();
         }
-
+        [Authentication.Authentication]
         [HttpGet]
         public async Task<IHttpActionResult> Get([FromUri] SellOfferFilterDto filter)
         {
@@ -69,7 +69,7 @@ namespace LGSA_Server.Controllers
 
             return Ok(dto);
         }
-
+        [Authentication.Authentication]
         [HttpPost]
         public async Task<IHttpActionResult> Post([FromBody] SellOfferDto dto)
         {
@@ -92,7 +92,7 @@ namespace LGSA_Server.Controllers
             dto = _sellAssembler.EntityToDto(offer);
             return Ok(dto);
         }
-
+        [Authentication.Authentication]
         [HttpPut]
         public async Task<IHttpActionResult> Put([FromBody] SellOfferDto dto)
         {
@@ -116,7 +116,7 @@ namespace LGSA_Server.Controllers
             dto = _sellAssembler.EntityToDto(offer);
             return Ok(dto);
         }
-
+        [Authentication.Authentication]
         [HttpDelete]
         public async Task<IHttpActionResult> Delete([FromBody] SellOfferDto dto)
         {

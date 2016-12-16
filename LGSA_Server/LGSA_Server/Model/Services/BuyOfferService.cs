@@ -2,6 +2,7 @@
 using LGSA_Server.Model;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -30,7 +31,7 @@ namespace LGSA.Model.Services
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }
-                catch (Exception e)
+                catch (EntityException)
                 {
                     unitOfWork.Rollback();
                     success = false;
@@ -51,7 +52,7 @@ namespace LGSA.Model.Services
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }
-                catch (Exception e)
+                catch (EntityException e)
                 {
                     unitOfWork.Rollback();
                     success = false;
@@ -69,7 +70,7 @@ namespace LGSA.Model.Services
                     var entity = await unitOfWork.BuyOfferRepository.GetById(id);
                     return entity;
                 }
-                catch (Exception e)
+                catch (EntityException)
                 {
                 }
             }
@@ -86,7 +87,7 @@ namespace LGSA.Model.Services
 
                     return entities;
                 }
-                catch (Exception e)
+                catch (EntityException)
                 {
                 }
             }
@@ -105,7 +106,7 @@ namespace LGSA.Model.Services
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }
-                catch (Exception e)
+                catch (EntityException)
                 {
                     unitOfWork.Rollback();
                     success = false;

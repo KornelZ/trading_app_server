@@ -3,6 +3,7 @@ using LGSA_Server.Model;
 using LGSA_Server.Model.Enums;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -33,15 +34,15 @@ namespace LGSA.Model.Services
                 try
                 {
                     unitOfWork.StartTransaction();
-                    var boughtProduct = await GetBoughtProduct(sellOffer, buyOffer, unitOfWork);
-                    buyOffer.product_id = boughtProduct.ID;
+                    buyOffer.product_id = sellOffer.product_id;
                     UpdateOffers(sellOffer, buyOffer, unitOfWork);
-
+                    var boughtProduct = await GetBoughtProduct(sellOffer, buyOffer, unitOfWork);
+                    await UpdateUserRating(sellOffer.seller_id, unitOfWork, rating);
                     var transaction = new transactions()
                     {
                         buyer_id = buyOffer.buyer_id,
                         seller_id = sellOffer.seller_id,
-                        buy_offer_id = buyOffer.ID,
+                        buy_Offer = buyOffer,
                         sell_offer_id = sellOffer.ID,
                         status_id = (int)TransactionState.Finished,
                         transaction_Date = DateTime.Now,
@@ -49,12 +50,11 @@ namespace LGSA.Model.Services
                         Update_Date = DateTime.Now,
                         Rating = rating 
                     };
-
                     unitOfWork.TransactionRepository.Add(transaction);
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }
-                catch (Exception e)
+                catch (EntityException)
                 {
                     unitOfWork.Rollback();
                     success = false;
@@ -95,22 +95,22 @@ namespace LGSA.Model.Services
 
             return product;  
         }
-        private async Task UpdateUserRating(int userId, IUnitOfWork unitOfWork)
-        {
-            var transactions = await unitOfWork.TransactionRepository.GetData(t => t.Update_Who != userId &&
-                (t.buyer_id == userId || t.seller_id == userId));
+        private async Task UpdateUserRating(int userId, IUnitOfWork unitOfWork, int? rating)
+        {      
+            if(rating != null)
+            {
+                var transactions = await unitOfWork.TransactionRepository.GetData(t => t.Update_Who != userId &&
+                    (t.buyer_id == userId || t.seller_id == userId));
 
-            int count = transactions.Count(t => t.Rating != null);
-            int sum = transactions.Sum(t => t.Rating ?? 0);
-            int? rating;
-            if(count != 0)
-            {
-                rating = sum / count;
+                int count = transactions.Count(t => t.Rating != null) + 1;
+                int sum = transactions.Sum(t => t.Rating ?? 0) + (int)rating;
+
+                var result = await unitOfWork.AuthenticationRepository.GetById(userId);
+                result.users1.Rating = sum / count;
+
+                //unitOfWork.AuthenticationRepository.Update(result);
             }
-            else
-            {
-                rating = null;
-            }
+
             //get user from repository and update rating
         }
         private void UpdateOffers(sell_Offer sellOffer, buy_Offer buyOffer, IUnitOfWork unitOfWork)
@@ -119,12 +119,10 @@ namespace LGSA.Model.Services
             sellOffer.status_id = (int)TransactionState.Finished;
             if (sellOffer.ID == 0)
             {
-                sellOffer = unitOfWork.SellOfferRepository.Add(sellOffer);
                 unitOfWork.BuyOfferRepository.Update(buyOffer);
             }
             else if(buyOffer.ID == 0)
             {
-                buyOffer = unitOfWork.BuyOfferRepository.Add(buyOffer);
                 unitOfWork.SellOfferRepository.Update(sellOffer);
             }
         }
@@ -141,15 +139,16 @@ namespace LGSA.Model.Services
                     {
                         return false;
                     }
-                    sellOffer.product_id = soldProduct.ID;
+                    sellOffer.product = soldProduct;
                     UpdateOffers(sellOffer, buyOffer, unitOfWork);
+                    await UpdateUserRating(buyOffer.buyer_id, unitOfWork, rating);
 
                     var transaction = new transactions()
                     {
                         buyer_id = buyOffer.buyer_id,
                         seller_id = sellOffer.seller_id,
                         buy_offer_id = buyOffer.ID,
-                        sell_offer_id = sellOffer.ID,
+                        sell_Offer = sellOffer,
                         status_id = (int)TransactionState.Finished,
                         transaction_Date = DateTime.Now,
                         Update_Who = sellOffer.seller_id,

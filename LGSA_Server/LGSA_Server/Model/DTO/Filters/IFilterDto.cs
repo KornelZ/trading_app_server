@@ -15,8 +15,6 @@ namespace LGSA_Server.Model.DTO.Filters
         int? ProductTypeId { get; set; }
         double Rating { get; set; }
         int Stock { get; set; }
-        decimal Price { get; set; }
-
         Expression<Func<T, bool>> GetFilter(int userId);
     }
 }

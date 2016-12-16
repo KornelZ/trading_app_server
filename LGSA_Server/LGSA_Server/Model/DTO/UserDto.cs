@@ -16,8 +16,7 @@ namespace LGSA_Server.Model.DTO
         [Required]
         public string UserName { get; set; }
         public int? Rating { get; set; }
-        [Required]
-        public int AddressId { get; set; }
+        public int? AddressId { get; set; }
         public AddressDto Address { get; set; }
     }
 }

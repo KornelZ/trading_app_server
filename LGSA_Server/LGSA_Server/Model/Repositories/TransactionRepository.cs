@@ -1,4 +1,5 @@
 ﻿using LGSA_Server.Model;
+using LinqKit;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -35,6 +36,7 @@ namespace LGSA.Model.Repositories
                 .Include(transactions => transactions.sell_Offer.product.dic_condition)
                 .Include(transactions => transactions.sell_Offer.product.dic_Genre)
                 .Include(transactions => transactions.sell_Offer.product.dic_Product_type)
+                .AsExpandable()
                 .Where(filter).ToListAsync();
         }
 

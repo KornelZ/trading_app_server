@@ -58,7 +58,7 @@ namespace LGSA_Server.Model.Assemblers
                 UserName = entity.UserName,
                 Rating = entity.Rating,
                 Address = _assembler.EntityToDto(entity.UserAddress1),
-                AddressId = (int)entity.Address_ID
+                AddressId = entity.Address_ID
             };
         }
     }

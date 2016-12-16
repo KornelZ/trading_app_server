@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using LGSA_Server.Model;
+using LinqKit;
 
 namespace LGSA.Model.Repositories
 {
@@ -15,11 +16,19 @@ namespace LGSA.Model.Repositories
         public AuthenticationRepository(DbContext context) : base(context)
         {
         }
-        //public override bool Update(users_Authetication entity)
-        //{
-        //    Attach(_context, entity);
-        //    return base.Update(entity);
-        //}
+        public override bool Update(users_Authetication entity)
+        {
+            Attach(_context, entity);
+            return base.Update(entity);
+        }
+        public override Task<users_Authetication> GetById(int id)
+        {
+
+            return _context.Set<users_Authetication>()
+                .Include(users_Authetication => users_Authetication.users1)
+                .Include(users_Authetication => users_Authetication.users1.UserAddress1)
+                .Where(u => u.User_id == id).SingleOrDefaultAsync();
+        }
         public override users_Authetication Add(users_Authetication entity)
         {
             if(_context.Set<users_Authetication>()
@@ -30,16 +39,21 @@ namespace LGSA.Model.Repositories
             {
                 return null;
             }
+            Attach(_context, entity);
             return base.Add(entity);
         }
         public override async Task<IEnumerable<users_Authetication>> GetData(Expression<Func<users_Authetication, bool>> filter)
         {
             if (filter == null)
             {
-                return await _context.Set<users_Authetication>().Include(u => u.users1).ToListAsync();
+                return await _context.Set<users_Authetication>()
+                    .Include(u => u.users1)
+                    .Include(u => u.users1.UserAddress1).ToListAsync();
             }
 
-            return await _context.Set<users_Authetication>().Include(u => u.users1).Where(filter).ToListAsync();
+            return await _context.Set<users_Authetication>()
+                .Include(u => u.users1)
+                .Include(u => u.users1.UserAddress1).AsExpandable().Where(filter).ToListAsync();
         }
         public static void Attach(DbContext ctx, users_Authetication entity)
         {

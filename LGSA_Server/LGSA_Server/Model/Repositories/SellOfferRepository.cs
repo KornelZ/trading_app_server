@@ -1,4 +1,5 @@
 ﻿using LGSA_Server.Model;
+using LinqKit;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -16,8 +17,8 @@ namespace LGSA.Model.Repositories
         }
         public override sell_Offer Add(sell_Offer entity)
         {
+            _context.Set<sell_Offer>().Include(b => b.product);
             Attach(_context, entity);
-
             return base.Add(entity);
         }
         public override async Task<IEnumerable<sell_Offer>> GetData(Expression<Func<sell_Offer, bool>> filter)
@@ -29,6 +30,7 @@ namespace LGSA.Model.Repositories
                 .Include(sell_Offer => sell_Offer.product.dic_condition)
                 .Include(sell_Offer => sell_Offer.product.dic_Product_type)
                 .Include(sell_Offer => sell_Offer.product.dic_Genre)
+                .AsExpandable()
                 .Where(filter).ToListAsync();
         }
 

@@ -1,6 +1,8 @@
 ﻿using LGSA_Server.Model.DTO.Filters;
+using LinqKit;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Web;
@@ -13,36 +15,53 @@ namespace LGSA_Server.Model.DTO.Filters
         public int? GenreId { get; set; }
         public int? ConditionId { get; set; }
         public int? ProductTypeId { get; set; }
+        [Range(0, 5)]
         public double Rating { get; set; }
+        [Required, Range(1, int.MaxValue)]
         public int Stock { get; set; }
+        [Range(0, int.MaxValue)]
         public decimal Price { get; set; }
+        [Required]
+        public bool ShowMyOffers { get; set; }
 
         public Expression<Func<buy_Offer, bool>> GetFilter(int userId)
         {
-            Expression<Func<buy_Offer, bool>> filter = b => b.buyer_id == userId && b.product.stock >= Stock && b.status_id == 1;
-
+            var builder = PredicateBuilder.New<buy_Offer>();
+            builder.And(b => b.product.stock >= Stock && b.status_id == 1);
+            if(Rating != 0)
+            {
+                builder.And(b => b.users.Rating >= Rating);
+            }
+            if(ShowMyOffers == true)
+            {
+                builder.And(b => b.buyer_id == userId);
+            }
+            else
+            {
+                builder.And(b => b.buyer_id != userId);
+            }
+            if (Price != 0)
+            {
+                builder.And(b => b.price <= (double)Price);
+            }
             if (ProductName != null)
             {
-                Expression<Func<buy_Offer, bool>> f = b => b.product.Name.Contains(ProductName);
-                filter = Expression.Lambda<Func<buy_Offer, bool>>(Expression.And(filter.Body, f.Body), filter.Parameters[0]);
+                builder.And(b => b.product.Name.Contains(ProductName));
             }
             if (ConditionId != null)
             {
-                Expression<Func<buy_Offer, bool>> f = b => b.product.condition_id == ConditionId;
-                filter = Expression.Lambda<Func<buy_Offer, bool>>(Expression.And(filter.Body, f.Body), filter.Parameters[0]);
+                builder.And(b => b.product.condition_id == ConditionId);
             }
             if (GenreId != null)
             {
-                Expression<Func<buy_Offer, bool>> f = b => b.product.genre_id == GenreId;
-                filter = Expression.Lambda<Func<buy_Offer, bool>>(Expression.And(filter.Body, f.Body), filter.Parameters[0]);
+                builder.And(b => b.product.genre_id == GenreId);
             }
             if (ProductTypeId != null)
             {
-                Expression<Func<buy_Offer, bool>> f = b => b.product.product_type_id == ProductTypeId;
-                filter = Expression.Lambda<Func<buy_Offer, bool>>(Expression.And(filter.Body, f.Body), filter.Parameters[0]);
+                builder.And(b => b.product.product_type_id == ProductTypeId);
             }
 
-            return filter;
+            return builder;
         }
     }
 }

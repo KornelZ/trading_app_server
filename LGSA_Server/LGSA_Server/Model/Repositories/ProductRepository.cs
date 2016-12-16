@@ -1,4 +1,5 @@
 ﻿using LGSA_Server.Model;
+using LinqKit;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -17,6 +18,7 @@ namespace LGSA.Model.Repositories
         public override product Add(product entity)
         {
             Attach(_context, entity);
+           
             return  base.Add(entity);
         }
 
@@ -36,7 +38,7 @@ namespace LGSA.Model.Repositories
 
             if(filter != null)
             {
-                products = products.Where(filter);
+                products = products.AsExpandable().Where(filter);
             }
 
             return await products.ToListAsync();

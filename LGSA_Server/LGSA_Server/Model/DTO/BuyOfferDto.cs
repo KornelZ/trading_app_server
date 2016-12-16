@@ -13,7 +13,7 @@ namespace LGSA_Server.Model.DTO
         [Required]
         public int BuyerId { get; set; }
         public decimal? Price { get; set; }
-        [Required, Range(0, int.MaxValue)]
+        [Required, Range(1, int.MaxValue)]
         public int Amount { get; set; }
         [Required]
         public string Name { get; set; }
