@@ -3,6 +3,7 @@ using LGSA_Server.Model;
 using LGSA_Server.Model.Enums;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity.Core;
 using System.Linq;
 using System.Linq.Expressions;
@@ -54,7 +55,7 @@ namespace LGSA.Model.Services
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }
-                catch (EntityException)
+                catch (DBConcurrencyException)
                 {
                     unitOfWork.Rollback();
                     success = false;
@@ -135,10 +136,7 @@ namespace LGSA.Model.Services
                 {
                     unitOfWork.StartTransaction();
                     var soldProduct = await GetSoldProduct(sellOffer, buyOffer, unitOfWork);
-                    if(soldProduct == null)
-                    {
-                        return false;
-                    }
+
                     sellOffer.product = soldProduct;
                     UpdateOffers(sellOffer, buyOffer, unitOfWork);
                     await UpdateUserRating(buyOffer.buyer_id, unitOfWork, rating);
@@ -160,7 +158,7 @@ namespace LGSA.Model.Services
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }
-                catch (Exception e)
+                catch (DBConcurrencyException)
                 {
                     unitOfWork.Rollback();
                     success = false;
@@ -200,7 +198,7 @@ namespace LGSA.Model.Services
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }
-                catch (Exception e)
+                catch (DBConcurrencyException)
                 {
                     unitOfWork.Rollback();
                     success = false;
@@ -220,7 +218,7 @@ namespace LGSA.Model.Services
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }
-                catch (Exception e)
+                catch (DBConcurrencyException)
                 {
                     unitOfWork.Rollback();
                     success = false;
@@ -271,7 +269,7 @@ namespace LGSA.Model.Services
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }
-                catch (Exception e)
+                catch (DBConcurrencyException)
                 {
                     unitOfWork.Rollback();
                     success = false;

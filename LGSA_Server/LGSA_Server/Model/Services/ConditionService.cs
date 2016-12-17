@@ -2,6 +2,7 @@
 using LGSA_Server.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity.Core;
 using System.Linq;
 using System.Linq.Expressions;
@@ -31,10 +32,9 @@ namespace LGSA.Model.Services
                 }
                 catch (EntityException)
                 {
+                    return null;
                 }
             }
-
-            return null;
         }
     }
 }

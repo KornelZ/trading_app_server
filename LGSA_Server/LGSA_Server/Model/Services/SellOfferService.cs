@@ -2,6 +2,7 @@
 using LGSA_Server.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity.Core;
 using System.Linq;
 using System.Linq.Expressions;
@@ -36,7 +37,7 @@ namespace LGSA.Model.Services
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }
-                catch (EntityException)
+                catch (DBConcurrencyException)
                 {
                     unitOfWork.Rollback();
                     success = false;
@@ -70,7 +71,7 @@ namespace LGSA.Model.Services
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }
-                catch (EntityException)
+                catch (DBConcurrencyException)
                 {
                     unitOfWork.Rollback();
                     success = false;
@@ -124,7 +125,7 @@ namespace LGSA.Model.Services
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }
-                catch (EntityException)
+                catch (DBConcurrencyException)
                 {
                     unitOfWork.Rollback();
                     success = false;

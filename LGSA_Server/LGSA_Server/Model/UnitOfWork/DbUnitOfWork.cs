@@ -21,41 +21,41 @@ namespace LGSA.Model.UnitOfWork
         private IRepository<dic_Product_type> _productTypeRepository;
         private IRepository<sell_Offer> _sellOfferRepository;
         private IRepository<transactions> _transactionRepository;
-        public MainDatabaseEntities Context
+        public virtual MainDatabaseEntities Context
         {
             get { return _context; }
         }
 
-        public IRepository<users_Authetication> AuthenticationRepository
+        public virtual IRepository<users_Authetication> AuthenticationRepository
         {
             get { return _authenticationRepository; }
         }
 
-        public IRepository<product> ProductRepository
+        public virtual IRepository<product> ProductRepository
         {
             get { return _productRepository; }
         }
-        public IRepository<buy_Offer> BuyOfferRepository
+        public virtual IRepository<buy_Offer> BuyOfferRepository
         {
             get { return _buyOfferRepository; }
         }
-        public IRepository<sell_Offer> SellOfferRepository
+        public virtual IRepository<sell_Offer> SellOfferRepository
         {
             get { return _sellOfferRepository; }
         }
-        public IRepository<dic_condition> ConditionRepository
+        public virtual IRepository<dic_condition> ConditionRepository
         {
             get { return _conditionRepository; }
         }
-        public IRepository<dic_Genre> GenreRepository
+        public virtual IRepository<dic_Genre> GenreRepository
         {
             get { return _genreRepository; }
         }
-        public IRepository<dic_Product_type> ProductTypeRepository
+        public virtual IRepository<dic_Product_type> ProductTypeRepository
         {
             get { return _productTypeRepository; }
         }
-        public IRepository<transactions> TransactionRepository
+        public virtual IRepository<transactions> TransactionRepository
         {
             get { return _transactionRepository; }
         }
@@ -73,25 +73,25 @@ namespace LGSA.Model.UnitOfWork
             _productTypeRepository = new Repository<dic_Product_type>(_context);
             _transactionRepository = new TransactionRepository(_context);
         }
-        public void Commit()
+        public virtual void Commit()
         {
             _transaction?.Commit();
         }
-        public void Rollback()
+        public virtual void Rollback()
         {
             _transaction?.Rollback();
         }
-        public void Dispose()
+        public virtual void Dispose()
         {
             _transaction?.Dispose();
             _context?.Dispose();
         }  
-        public async Task<int> Save()
+        public virtual async Task<int> Save()
         {
             return  await _context.SaveChangesAsync();
         }
 
-        public void StartTransaction()
+        public virtual void StartTransaction()
         {
             if(_transaction == null)
             {
