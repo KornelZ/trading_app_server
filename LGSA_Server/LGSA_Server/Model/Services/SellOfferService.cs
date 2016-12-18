@@ -37,7 +37,7 @@ namespace LGSA.Model.Services
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }
-                catch (DBConcurrencyException)
+                catch (Exception)
                 {
                     unitOfWork.Rollback();
                     return ErrorValue.ServerError;
@@ -59,6 +59,20 @@ namespace LGSA.Model.Services
             }
             return true;
         }
+        private async Task<bool> CanUpdateOffer(sell_Offer entity, IUnitOfWork unitOfWork)
+        {
+            var productOffers = await unitOfWork.SellOfferRepository
+                                        .GetData(offer => offer.seller_id == entity.seller_id
+                                        && offer.product_id == entity.product_id && offer.status_id != 3 && offer.ID != entity.ID);
+            var totalAmount = entity.amount + productOffers.Sum(offer => offer.amount);
+            var product = await unitOfWork.ProductRepository.GetById(entity.product_id);
+
+            if (totalAmount > product?.stock)
+            {
+                return false;
+            }
+            return true;
+        }
         public async Task<ErrorValue> Delete(sell_Offer entity)
         {
             using (var unitOfWork = _factory.CreateUnitOfWork())
@@ -70,7 +84,7 @@ namespace LGSA.Model.Services
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }
-                catch (DBConcurrencyException)
+                catch (Exception)
                 {
                     unitOfWork.Rollback();
                     return ErrorValue.ServerError;
@@ -88,7 +102,7 @@ namespace LGSA.Model.Services
                     var entity = await unitOfWork.SellOfferRepository.GetById(id);
                     return entity;
                 }
-                catch (EntityException)
+                catch (Exception)
                 {
                 }
             }
@@ -105,7 +119,7 @@ namespace LGSA.Model.Services
 
                     return entities;
                 }
-                catch (EntityException)
+                catch (Exception)
                 {
                 }
             }
@@ -119,11 +133,16 @@ namespace LGSA.Model.Services
                 try
                 {
                     unitOfWork.StartTransaction();
+                    var canAdd = await CanUpdateOffer(entity, unitOfWork);
+                    if (canAdd == false)
+                    {
+                        return ErrorValue.AmountGreaterThanStock;
+                    }
                     unitOfWork.SellOfferRepository.Update(entity);
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }
-                catch (DBConcurrencyException)
+                catch (Exception)
                 {
                     unitOfWork.Rollback();
                     return ErrorValue.ServerError;

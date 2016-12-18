@@ -36,7 +36,7 @@ namespace LGSA.Model.Services
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }
-                catch(DBConcurrencyException)
+                catch(Exception)
                 {
                     unitOfWork.Rollback();
                     return ErrorValue.ServerError;
@@ -56,7 +56,7 @@ namespace LGSA.Model.Services
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }
-                catch (DBConcurrencyException)
+                catch (Exception)
                 {
                     unitOfWork.Rollback();
                     return ErrorValue.ServerError;
@@ -74,7 +74,7 @@ namespace LGSA.Model.Services
                     var entity = await unitOfWork.AuthenticationRepository.GetById(id);
                     return entity;
                 }
-                catch (EntityException)
+                catch (Exception)
                 {
                 }
             }
@@ -91,7 +91,7 @@ namespace LGSA.Model.Services
 
                     return entities;
                 }
-                catch (EntityException)
+                catch (Exception)
                 {
                 }
             }
@@ -109,7 +109,7 @@ namespace LGSA.Model.Services
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }
-                catch (DBConcurrencyException)
+                catch (Exception)
                 {
                     unitOfWork.Rollback();
                     return ErrorValue.ServerError;

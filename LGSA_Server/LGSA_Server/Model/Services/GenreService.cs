@@ -28,7 +28,7 @@ namespace LGSA.Model.Services
 
                     return entities;
                 }
-                catch (EntityException)
+                catch (Exception)
                 {
                 }
             }

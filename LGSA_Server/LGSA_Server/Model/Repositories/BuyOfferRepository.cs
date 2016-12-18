@@ -49,7 +49,7 @@ namespace LGSA.Model.Repositories
                 .Include(buy_Offer => buy_Offer.product.dic_condition)
                 .Include(buy_Offer => buy_Offer.product.dic_Product_type)
                 .Include(buy_Offer => buy_Offer.dic_Offer_status)
-                .FirstOrDefaultAsync(b => b.buyer_id == id);
+                .FirstOrDefaultAsync(b => b.ID == id);
         }
 
         public static void Attach(DbContext ctx, buy_Offer entity)

@@ -2,6 +2,7 @@
 using LGSA.Model.UnitOfWork;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -53,23 +54,33 @@ namespace LGSA_Server.Authentication
                 ctx.ErrorResult = new ErrorResult(EmptyRequest, request);
                 return;
             }
-            var credentials = ParseCredentials(authorization.Parameter);
-            if(credentials == null)
+            try
             {
-                ctx.ErrorResult = new ErrorResult(InvalidRequest, request);
-                return;
-            }
-            string id = credentials.Item1;
-            string password = credentials.Item2;
 
-            IPrincipal principal = await AuthenticateAsync(id, password, token);
-            if(principal == null)
+
+                var credentials = ParseCredentials(authorization.Parameter);
+                if (credentials == null)
+                {
+                    ctx.ErrorResult = new ErrorResult(InvalidRequest, request);
+                    return;
+                }
+                string id = credentials.Item1;
+                string password = credentials.Item2;
+
+                IPrincipal principal = await AuthenticateAsync(id, password, token);
+                if (principal == null)
+                {
+                    ctx.ErrorResult = new ErrorResult(InvalidAuthentication, request);
+                    return;
+                }
+
+                ctx.Principal = principal;
+            }
+            catch(Exception)
             {
                 ctx.ErrorResult = new ErrorResult(InvalidAuthentication, request);
                 return;
             }
-
-            ctx.Principal = principal;
         }
         private async Task<IPrincipal> AuthenticateAsync(string id, string password, CancellationToken token)
         {

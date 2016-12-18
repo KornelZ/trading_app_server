@@ -66,7 +66,7 @@ namespace LGSA.Model.Services
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }
-                catch (DBConcurrencyException)
+                catch (Exception)
                 {
                     unitOfWork.Rollback();
                     return ErrorValue.ServerError;
@@ -149,6 +149,7 @@ namespace LGSA.Model.Services
                         buyer_id = buyOffer.buyer_id,
                         seller_id = sellOffer.seller_id,
                         sell_Offer = sellOffer,
+                        buy_offer_id = buyOffer.ID,
                         status_id = (int)TransactionState.Finished,
                         transaction_Date = DateTime.Now,
                         Update_Who = sellOffer.seller_id,
@@ -160,7 +161,7 @@ namespace LGSA.Model.Services
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }
-                catch (DBConcurrencyException)
+                catch (Exception)
                 {
                     unitOfWork.Rollback();
                     return ErrorValue.ServerError;
@@ -171,18 +172,18 @@ namespace LGSA.Model.Services
         private async Task<product> GetSoldProduct(sell_Offer sellOffer, buy_Offer buyOffer, IUnitOfWork unitOfWork)
         {
             var boughtProduct = await unitOfWork.ProductRepository.GetById(buyOffer.product_id);
-            boughtProduct.stock += sellOffer.amount;
+            boughtProduct.stock += buyOffer.amount;
             unitOfWork.ProductRepository.Update(boughtProduct);
             var soldProduct = await unitOfWork.ProductRepository.GetData(p => p.product_owner == sellOffer.seller_id
                                                                     && p.Name == boughtProduct.Name);
             if (soldProduct.Count() != 0)
             {
                 var p = soldProduct.First();
-                if(p.stock < sellOffer.amount)
+                if(p.stock < buyOffer.amount)
                 {
                     return null;
                 }
-                p.stock -= sellOffer.amount;
+                p.stock -= buyOffer.amount;
                 unitOfWork.ProductRepository.Update(p);
                 return p;
             }

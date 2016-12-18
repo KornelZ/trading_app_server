@@ -59,6 +59,10 @@ namespace LGSA_Server.Controllers
             {
                 return BadRequest("Transaction error");
             }
+            else if(result == ErrorValue.TransactionAlreadyFinished)
+            {
+                return BadRequest("Transaction already finished");
+            }
             return Ok();
         }
         [Authentication.Authentication]
@@ -118,6 +122,10 @@ namespace LGSA_Server.Controllers
             if (result == ErrorValue.ServerError)
             {
                 return NotFound();
+            }
+            else if(result == ErrorValue.AmountGreaterThanStock)
+            {
+                return BadRequest("Amount greater than stock");
             }
             dto = _sellAssembler.EntityToDto(offer);
             return Ok(dto);
