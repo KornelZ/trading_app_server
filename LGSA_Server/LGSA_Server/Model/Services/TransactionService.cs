@@ -37,17 +37,25 @@ namespace LGSA.Model.Services
                 try
                 {
                     unitOfWork.StartTransaction();
+                    //get actual sellOffer from database
                     sellOffer = await unitOfWork.SellOfferRepository.GetById(sellOffer.ID);
+                    if(sellOffer.status_id == 3)
+                    {
+                        return ErrorValue.TransactionAlreadyFinished;
+                    }
                     buyOffer.product_id = sellOffer.product_id;
-                    UpdateOffers(sellOffer, buyOffer);
+                    //set offers to finished
+                    UpdateOffers(sellOffer, buyOffer, unitOfWork);
+                    //update product stocks
                     var boughtProduct = await GetBoughtProduct(sellOffer, buyOffer, unitOfWork);
+                    //change user rating
                     await _ratingUpdater.UpdateRating(sellOffer.seller_id, unitOfWork, rating);
                     var transaction = new transactions()
                     {
                         buyer_id = buyOffer.buyer_id,
                         seller_id = sellOffer.seller_id,
                         buy_Offer = buyOffer,
-                        sell_Offer = sellOffer,
+                        sell_offer_id = sellOffer.ID,
                         status_id = (int)TransactionState.Finished,
                         transaction_Date = DateTime.Now,
                         Update_Who = buyOffer.buyer_id,
@@ -74,6 +82,7 @@ namespace LGSA.Model.Services
             unitOfWork.ProductRepository.Update(soldProduct);
             var boughtProduct = await unitOfWork.ProductRepository.GetData(p => p.product_owner == buyOffer.buyer_id
                                                                     && p.Name == soldProduct.Name);
+            //if there is an existing product with such name and owner then update
             if(boughtProduct.Count() != 0)
             {
                 var p = boughtProduct.First();
@@ -81,7 +90,7 @@ namespace LGSA.Model.Services
                 unitOfWork.ProductRepository.Update(p);
                 return p;
             }
-
+            //otherwise update and add
             var product = new product()
             {
                 ID = 0,
@@ -100,10 +109,19 @@ namespace LGSA.Model.Services
             return product;  
         }
 
-        private void UpdateOffers(sell_Offer sellOffer, buy_Offer buyOffer)
+        private void UpdateOffers(sell_Offer sellOffer, buy_Offer buyOffer, IUnitOfWork unitOfWork)
         {
             buyOffer.status_id = (int)TransactionState.Finished;
             sellOffer.status_id = (int)TransactionState.Finished;
+
+            if(buyOffer.ID != 0)
+            {
+                unitOfWork.BuyOfferRepository.Update(buyOffer);
+            }
+            else if(sellOffer.ID != 0)
+            {
+                unitOfWork.SellOfferRepository.Update(sellOffer);
+            }
         }
         public async Task<ErrorValue> AcceptBuyTransaction(sell_Offer sellOffer, buy_Offer buyOffer, int? rating)
         {
@@ -113,20 +131,23 @@ namespace LGSA.Model.Services
                 {
                     unitOfWork.StartTransaction();
                     buyOffer = await unitOfWork.BuyOfferRepository.GetById(buyOffer.ID);
+                    if(buyOffer.status_id == 3)
+                    {
+                        return ErrorValue.TransactionAlreadyFinished;
+                    }
                     var soldProduct = await GetSoldProduct(sellOffer, buyOffer, unitOfWork);
                     if(soldProduct == null)
                     {
                         return ErrorValue.AmountGreaterThanStock;
                     }
                     sellOffer.product = soldProduct;
-                    UpdateOffers(sellOffer, buyOffer);
+                    UpdateOffers(sellOffer, buyOffer, unitOfWork);
                     await _ratingUpdater.UpdateRating(buyOffer.buyer_id, unitOfWork, rating);
 
                     var transaction = new transactions()
                     {
                         buyer_id = buyOffer.buyer_id,
                         seller_id = sellOffer.seller_id,
-                        buy_Offer = buyOffer,
                         sell_Offer = sellOffer,
                         status_id = (int)TransactionState.Finished,
                         transaction_Date = DateTime.Now,

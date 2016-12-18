@@ -36,7 +36,7 @@ namespace LGSA_Server.Controllers
                                                                     new ProductTypeAssembler()));
             _transactionService = new TransactionService(factory, ratingUpdater);
         }
-
+        [Authentication.Authentication]
         [HttpPost, Route("AcceptBuyTransaction/")]
         public async Task<IHttpActionResult> AcceptBuyTransaction([FromBody] TransactionDto dto)
         {
@@ -65,7 +65,7 @@ namespace LGSA_Server.Controllers
             }
             return Ok();
         }
-
+        [Authentication.Authentication]
         [HttpGet]
         public async Task<IHttpActionResult> Get([FromUri] BuyOfferFilterDto filter)
         {
@@ -75,7 +75,7 @@ namespace LGSA_Server.Controllers
 
             return Ok(dto);
         }
-
+        [Authentication.Authentication]
         [HttpPost]
         public async Task<IHttpActionResult> Post([FromBody] BuyOfferDto dto)
         {
@@ -97,7 +97,7 @@ namespace LGSA_Server.Controllers
             dto = _buyAssembler.EntityToDto(offer);
             return Ok(dto);
         }
-
+        [Authentication.Authentication]
         [HttpPut]
         public async Task<IHttpActionResult> Put([FromBody] BuyOfferDto dto)
         {
@@ -121,7 +121,7 @@ namespace LGSA_Server.Controllers
             dto = _buyAssembler.EntityToDto(offer);
             return Ok(dto);
         }
-
+        [Authentication.Authentication]
         [HttpDelete]
         public async Task<IHttpActionResult> Delete([FromBody] BuyOfferDto dto)
         {

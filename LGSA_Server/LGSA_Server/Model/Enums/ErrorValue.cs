@@ -10,6 +10,7 @@ namespace LGSA_Server.Model.Enums
         NoError = 0,
         ServerError = 1,
         AmountGreaterThanStock = 2,
-        EntityExists = 3
+        EntityExists = 3,
+        TransactionAlreadyFinished = 4
     }
 }

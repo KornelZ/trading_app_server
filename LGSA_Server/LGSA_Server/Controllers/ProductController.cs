@@ -37,6 +37,7 @@ namespace LGSA_Server.Controllers
 
         }
         // GET: api/Product
+        [Authentication.Authentication]
         [HttpGet]
         public async Task<IHttpActionResult> Get([FromUri] ProductFilterDto filter)
         {
@@ -46,6 +47,7 @@ namespace LGSA_Server.Controllers
 
             return Ok(dto);
         }
+        [Authentication.Authentication]
         [HttpPost]
         public async Task<IHttpActionResult> Post([FromBody] ProductDto dto)
         {
@@ -74,6 +76,7 @@ namespace LGSA_Server.Controllers
             dto = _assembler.EntityToDto(product);
             return Ok(dto);
         }
+        [Authentication.Authentication]
         [HttpPut]
         public async Task<IHttpActionResult> Put([FromBody] ProductDto dto)
         {
