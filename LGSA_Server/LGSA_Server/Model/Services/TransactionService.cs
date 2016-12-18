@@ -1,6 +1,7 @@
 ﻿using LGSA.Model.UnitOfWork;
 using LGSA_Server.Model;
 using LGSA_Server.Model.Enums;
+using LGSA_Server.Model.Services.TransactionLogic;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -16,35 +17,37 @@ namespace LGSA.Model.Services
 
     public interface ITransactionService : IDataService<transactions>
     {
-        Task<bool> AcceptSellTransaction(sell_Offer sellOffer, buy_Offer buyOffer, int? rating);
-        Task<bool> AcceptBuyTransaction(sell_Offer sellOffer, buy_Offer buyOffer, int? rating);
+        Task<ErrorValue> AcceptSellTransaction(sell_Offer sellOffer, buy_Offer buyOffer, int? rating);
+        Task<ErrorValue> AcceptBuyTransaction(sell_Offer sellOffer, buy_Offer buyOffer, int? rating);
 
     }
     public class TransactionService : ITransactionService
     {
         private IUnitOfWorkFactory _factory;
-        public TransactionService(IUnitOfWorkFactory factory)
+        private IRatingUpdater _ratingUpdater;
+        public TransactionService(IUnitOfWorkFactory factory, IRatingUpdater ratingUpdater)
         {
             _factory = factory;
+            _ratingUpdater = ratingUpdater;
         }
-        public async Task<bool> AcceptSellTransaction(sell_Offer sellOffer, buy_Offer buyOffer, int? rating)
+        public async Task<ErrorValue> AcceptSellTransaction(sell_Offer sellOffer, buy_Offer buyOffer, int? rating)
         {
-            bool success = true;
             using (var unitOfWork = _factory.CreateUnitOfWork())
             {
                 try
                 {
                     unitOfWork.StartTransaction();
+                    sellOffer = await unitOfWork.SellOfferRepository.GetById(sellOffer.ID);
                     buyOffer.product_id = sellOffer.product_id;
-                    UpdateOffers(sellOffer, buyOffer, unitOfWork);
+                    UpdateOffers(sellOffer, buyOffer);
                     var boughtProduct = await GetBoughtProduct(sellOffer, buyOffer, unitOfWork);
-                    await UpdateUserRating(sellOffer.seller_id, unitOfWork, rating);
+                    await _ratingUpdater.UpdateRating(sellOffer.seller_id, unitOfWork, rating);
                     var transaction = new transactions()
                     {
                         buyer_id = buyOffer.buyer_id,
                         seller_id = sellOffer.seller_id,
                         buy_Offer = buyOffer,
-                        sell_offer_id = sellOffer.ID,
+                        sell_Offer = sellOffer,
                         status_id = (int)TransactionState.Finished,
                         transaction_Date = DateTime.Now,
                         Update_Who = buyOffer.buyer_id,
@@ -58,10 +61,10 @@ namespace LGSA.Model.Services
                 catch (DBConcurrencyException)
                 {
                     unitOfWork.Rollback();
-                    success = false;
+                    return ErrorValue.ServerError;
                 }
             }
-            return success;
+            return ErrorValue.NoError;
         }
 
         private async Task<product> GetBoughtProduct(sell_Offer sellOffer, buy_Offer buyOffer, IUnitOfWork unitOfWork)
@@ -96,56 +99,34 @@ namespace LGSA.Model.Services
 
             return product;  
         }
-        private async Task UpdateUserRating(int userId, IUnitOfWork unitOfWork, int? rating)
-        {      
-            if(rating != null)
-            {
-                var transactions = await unitOfWork.TransactionRepository.GetData(t => t.Update_Who != userId &&
-                    (t.buyer_id == userId || t.seller_id == userId));
 
-                int count = transactions.Count(t => t.Rating != null) + 1;
-                int sum = transactions.Sum(t => t.Rating ?? 0) + (int)rating;
-
-                var result = await unitOfWork.AuthenticationRepository.GetById(userId);
-                result.users1.Rating = sum / count;
-
-                //unitOfWork.AuthenticationRepository.Update(result);
-            }
-
-            //get user from repository and update rating
-        }
-        private void UpdateOffers(sell_Offer sellOffer, buy_Offer buyOffer, IUnitOfWork unitOfWork)
+        private void UpdateOffers(sell_Offer sellOffer, buy_Offer buyOffer)
         {
             buyOffer.status_id = (int)TransactionState.Finished;
             sellOffer.status_id = (int)TransactionState.Finished;
-            if (sellOffer.ID == 0)
-            {
-                unitOfWork.BuyOfferRepository.Update(buyOffer);
-            }
-            else if(buyOffer.ID == 0)
-            {
-                unitOfWork.SellOfferRepository.Update(sellOffer);
-            }
         }
-        public async Task<bool> AcceptBuyTransaction(sell_Offer sellOffer, buy_Offer buyOffer, int? rating)
+        public async Task<ErrorValue> AcceptBuyTransaction(sell_Offer sellOffer, buy_Offer buyOffer, int? rating)
         {
-            bool success = true;
             using (var unitOfWork = _factory.CreateUnitOfWork())
             {
                 try
                 {
                     unitOfWork.StartTransaction();
+                    buyOffer = await unitOfWork.BuyOfferRepository.GetById(buyOffer.ID);
                     var soldProduct = await GetSoldProduct(sellOffer, buyOffer, unitOfWork);
-
+                    if(soldProduct == null)
+                    {
+                        return ErrorValue.AmountGreaterThanStock;
+                    }
                     sellOffer.product = soldProduct;
-                    UpdateOffers(sellOffer, buyOffer, unitOfWork);
-                    await UpdateUserRating(buyOffer.buyer_id, unitOfWork, rating);
+                    UpdateOffers(sellOffer, buyOffer);
+                    await _ratingUpdater.UpdateRating(buyOffer.buyer_id, unitOfWork, rating);
 
                     var transaction = new transactions()
                     {
                         buyer_id = buyOffer.buyer_id,
                         seller_id = sellOffer.seller_id,
-                        buy_offer_id = buyOffer.ID,
+                        buy_Offer = buyOffer,
                         sell_Offer = sellOffer,
                         status_id = (int)TransactionState.Finished,
                         transaction_Date = DateTime.Now,
@@ -161,10 +142,10 @@ namespace LGSA.Model.Services
                 catch (DBConcurrencyException)
                 {
                     unitOfWork.Rollback();
-                    success = false;
+                    return ErrorValue.ServerError;
                 }
             }
-            return success;
+            return ErrorValue.NoError;
         }
         private async Task<product> GetSoldProduct(sell_Offer sellOffer, buy_Offer buyOffer, IUnitOfWork unitOfWork)
         {
@@ -186,9 +167,8 @@ namespace LGSA.Model.Services
             }
             return null;
         }
-        public async Task<bool> Add(transactions entity)
+        public async Task<ErrorValue> Add(transactions entity)
         {
-            bool success = true;
             using (var unitOfWork = _factory.CreateUnitOfWork())
             {
                 try
@@ -201,12 +181,12 @@ namespace LGSA.Model.Services
                 catch (DBConcurrencyException)
                 {
                     unitOfWork.Rollback();
-                    success = false;
+                    return ErrorValue.ServerError;
                 }
             }
-            return success;
+            return ErrorValue.NoError;
         }
-        public async Task<bool> Delete(transactions entity)
+        public async Task<ErrorValue> Delete(transactions entity)
         {
             bool success = true;
             using (var unitOfWork = _factory.CreateUnitOfWork())
@@ -221,10 +201,10 @@ namespace LGSA.Model.Services
                 catch (DBConcurrencyException)
                 {
                     unitOfWork.Rollback();
-                    success = false;
+                    return ErrorValue.ServerError;
                 }
             }
-            return success;
+            return ErrorValue.NoError;
         }
         public async Task<transactions> GetById(int id)
         {
@@ -257,9 +237,8 @@ namespace LGSA.Model.Services
             }
             return null;
         }
-        public async Task<bool> Update(transactions entity)
+        public async Task<ErrorValue> Update(transactions entity)
         {
-            bool success = true;
             using (var unitOfWork = _factory.CreateUnitOfWork())
             {
                 try
@@ -272,10 +251,10 @@ namespace LGSA.Model.Services
                 catch (DBConcurrencyException)
                 {
                     unitOfWork.Rollback();
-                    success = false;
+                    return ErrorValue.ServerError;
                 }
             }
-            return success;
+            return ErrorValue.NoError;
         }
     }
 }

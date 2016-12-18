@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LGSA_Server.Model.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -14,8 +15,8 @@ namespace LGSA.Model.Services
     public interface IDataService<T> : IDictionaryService<T>
     {
         Task<T> GetById(int id);
-        Task<bool> Add(T entity);
-        Task<bool> Update(T entity);
-        Task<bool> Delete(T entity);
+        Task<ErrorValue> Add(T entity);
+        Task<ErrorValue> Update(T entity);
+        Task<ErrorValue> Delete(T entity);
     }
 }

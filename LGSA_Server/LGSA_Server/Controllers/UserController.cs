@@ -4,6 +4,7 @@ using LGSA_Server.Authentication;
 using LGSA_Server.Model;
 using LGSA_Server.Model.Assemblers;
 using LGSA_Server.Model.DTO;
+using LGSA_Server.Model.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,7 +70,7 @@ namespace LGSA_Server.Controllers
             var user = _assembler.DtoToEntity(dto);
 
             var result = await _service.Add(user);
-            if (result == false)
+            if (result == ErrorValue.EntityExists)
             {
                 return BadRequest("Such user already exists");
             }
@@ -94,7 +95,7 @@ namespace LGSA_Server.Controllers
             var user = _assembler.DtoToEntity(dto);
 
             var result = await _service.Update(user);
-            if(result == false)
+            if(result == ErrorValue.ServerError)
             {
                 return BadRequest("Incorrect data");
             }

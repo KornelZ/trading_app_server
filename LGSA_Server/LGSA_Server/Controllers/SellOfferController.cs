@@ -5,6 +5,8 @@ using LGSA_Server.Model;
 using LGSA_Server.Model.Assemblers;
 using LGSA_Server.Model.DTO;
 using LGSA_Server.Model.DTO.Filters;
+using LGSA_Server.Model.Enums;
+using LGSA_Server.Model.Services.TransactionLogic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,10 +24,10 @@ namespace LGSA_Server.Controllers
         private ITwoWayAssembler<buy_Offer, BuyOfferDto> _buyAssembler;
         private IDataService<sell_Offer> _service;
         private ITransactionService _transactionService;
-        public SellOfferController(IUnitOfWorkFactory factory)
+        public SellOfferController(IUnitOfWorkFactory factory, IRatingUpdater ratingUpdater)
         {
             _service = new SellOfferService(factory);
-            _transactionService = new TransactionService(factory);
+            _transactionService = new TransactionService(factory, ratingUpdater);
             _sellAssembler = new SellOfferAssembler(new ProductAssembler(new ConditionAssembler(),
                                                                     new GenreAssembler(),
                                                                     new ProductTypeAssembler()));
@@ -53,9 +55,9 @@ namespace LGSA_Server.Controllers
 
             var result = await _transactionService.AcceptSellTransaction(sellOffer, buyOffer, rating);
 
-            if (result == false)
+            if (result == ErrorValue.ServerError)
             {
-                return BadRequest("Error occured during the transaction");
+                return BadRequest("Transaction error");
             }
             return Ok();
         }
@@ -85,9 +87,13 @@ namespace LGSA_Server.Controllers
             var offer = _sellAssembler.DtoToEntity(dto);
 
             var result = await _service.Add(offer);
-            if (result == false)
+            if (result == ErrorValue.ServerError)
             {
-                return BadRequest(ModelState);
+                return BadRequest("Transaction error");
+            }
+            else if(result == ErrorValue.AmountGreaterThanStock)
+            {
+                return BadRequest("Amount greater than stock");
             }
             dto = _sellAssembler.EntityToDto(offer);
             return Ok(dto);
@@ -109,7 +115,7 @@ namespace LGSA_Server.Controllers
 
             var result = await _service.Update(offer);
 
-            if (result == false)
+            if (result == ErrorValue.ServerError)
             {
                 return NotFound();
             }
@@ -133,7 +139,7 @@ namespace LGSA_Server.Controllers
 
             var result = await _service.Delete(offer);
 
-            if (result == false)
+            if (result == ErrorValue.ServerError)
             {
                 return NotFound();
             }

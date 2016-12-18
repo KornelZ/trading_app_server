@@ -1,5 +1,6 @@
 ﻿using LGSA.Model.UnitOfWork;
 using LGSA_Server.App_Start;
+using LGSA_Server.Model.Services.TransactionLogic;
 using Microsoft.Practices.Unity;
 using Newtonsoft.Json;
 using System;
@@ -17,6 +18,7 @@ namespace LGSA_Server
 
             var container = new UnityContainer();
             container.RegisterType<IUnitOfWorkFactory, DbUnitOfWorkFactory>(new HierarchicalLifetimeManager());
+            container.RegisterType<IRatingUpdater, RatingUpdater>(new HierarchicalLifetimeManager());
             config.DependencyResolver = new UnityResolver(container);
 
             var jsonSettings = config.Formatters.JsonFormatter;

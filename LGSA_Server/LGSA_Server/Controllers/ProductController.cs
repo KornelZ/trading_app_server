@@ -17,6 +17,7 @@ using LGSA_Server.Model.Assemblers;
 using System.Threading;
 using LGSA_Server.Authentication;
 using LGSA_Server.Model.DTO.Filters;
+using LGSA_Server.Model.Enums;
 
 namespace LGSA_Server.Controllers
 {
@@ -59,16 +60,15 @@ namespace LGSA_Server.Controllers
 
             var product = _assembler.DtoToEntity(dto);
 
-            var prods = await _service.GetData(p => p.product_owner == product.product_owner && p.Name == product.Name);
-            if(prods.Count() != 0)
-            {
-                return BadRequest("Product already Exists");
-            }
             var result = await _service.Add(product);
 
-            if(result == false)
+            if(result == ErrorValue.EntityExists)
             {
-                return BadRequest(ModelState);
+                return BadRequest("Such product already exists.");
+            }
+            else if(result == ErrorValue.ServerError)
+            {
+                return BadRequest("Transaction error");
             }
 
             dto = _assembler.EntityToDto(product);
@@ -90,7 +90,7 @@ namespace LGSA_Server.Controllers
 
             var result = await _service.Update(product);
 
-            if(result == false)
+            if(result == ErrorValue.ServerError)
             {
                 return NotFound();
             }

@@ -1,7 +1,9 @@
 ﻿using LGSA.Model.UnitOfWork;
 using LGSA_Server.Model;
+using LGSA_Server.Model.Enums;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity.Core;
 using System.Linq;
 using System.Linq.Expressions;
@@ -19,34 +21,32 @@ namespace LGSA.Model.Services
             _factory = factory;
         }
 
-        public async Task<bool> Add(users_Authetication entity)
+        public async Task<ErrorValue> Add(users_Authetication entity)
         {
-            bool success = true;
             using (var unitOfWork = _factory.CreateUnitOfWork())
             {
                 try
                 {
                     unitOfWork.StartTransaction();
-                    var addedUser = unitOfWork.AuthenticationRepository.Add(entity);
-                    if(addedUser == null)
+                    var result = unitOfWork.AuthenticationRepository.Add(entity);
+                    if(result == null)
                     {
-                        return false;
+                        return ErrorValue.EntityExists;
                     }
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }
-                catch(EntityException e)
+                catch(DBConcurrencyException)
                 {
                     unitOfWork.Rollback();
-                    success = false;
+                    return ErrorValue.ServerError;
                 }
             }
-            return success;
+            return ErrorValue.NoError;
         }
 
-        public async Task<bool> Delete(users_Authetication entity)
+        public async Task<ErrorValue> Delete(users_Authetication entity)
         {
-            bool success = true;
             using (var unitOfWork = _factory.CreateUnitOfWork())
             {
                 try
@@ -56,13 +56,13 @@ namespace LGSA.Model.Services
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }
-                catch (EntityException e)
+                catch (DBConcurrencyException)
                 {
                     unitOfWork.Rollback();
-                    success = false;
+                    return ErrorValue.ServerError;
                 }
             }
-            return success;
+            return ErrorValue.NoError;
         }
 
         public async Task<users_Authetication> GetById(int id)
@@ -98,9 +98,8 @@ namespace LGSA.Model.Services
             return null;
         }
 
-        public async Task<bool> Update(users_Authetication entity)
+        public async Task<ErrorValue> Update(users_Authetication entity)
         {
-            bool success = true;
             using (var unitOfWork = _factory.CreateUnitOfWork())
             {
                 try
@@ -110,13 +109,13 @@ namespace LGSA.Model.Services
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }
-                catch (EntityException)
+                catch (DBConcurrencyException)
                 {
                     unitOfWork.Rollback();
-                    success = false;
+                    return ErrorValue.ServerError;
                 }
             }
-            return success;
+            return ErrorValue.NoError;
         }
     }
 }

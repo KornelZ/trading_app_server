@@ -5,6 +5,8 @@ using LGSA_Server.Model;
 using LGSA_Server.Model.Assemblers;
 using LGSA_Server.Model.DTO;
 using LGSA_Server.Model.DTO.Filters;
+using LGSA_Server.Model.Enums;
+using LGSA_Server.Model.Services.TransactionLogic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +24,7 @@ namespace LGSA_Server.Controllers
         private ITwoWayAssembler<sell_Offer, SellOfferDto> _sellAssembler;
         private IDataService<buy_Offer> _service;
         private ITransactionService _transactionService;
-        public BuyOfferController(IUnitOfWorkFactory factory)
+        public BuyOfferController(IUnitOfWorkFactory factory, IRatingUpdater ratingUpdater)
         {
             _service = new BuyOfferService(factory);
 
@@ -32,7 +34,7 @@ namespace LGSA_Server.Controllers
             _sellAssembler = new SellOfferAssembler(new ProductAssembler(new ConditionAssembler(),
                                                                     new GenreAssembler(),
                                                                     new ProductTypeAssembler()));
-            _transactionService = new TransactionService(factory);
+            _transactionService = new TransactionService(factory, ratingUpdater);
         }
 
         [HttpPost, Route("AcceptBuyTransaction/")]
@@ -40,7 +42,7 @@ namespace LGSA_Server.Controllers
         {
             if (ModelState.IsValid == false)
             {
-                return BadRequest(ModelState);
+                return BadRequest("Invalid data");
             }
             if (dto.SellOffer.SellerId != (Thread.CurrentPrincipal as UserPrincipal).Id)
             {
@@ -53,9 +55,13 @@ namespace LGSA_Server.Controllers
 
             var result = await _transactionService.AcceptBuyTransaction(sellOffer, buyOffer, rating);
 
-            if (result == false)
+            if (result == ErrorValue.AmountGreaterThanStock)
             {
-                return BadRequest("Error occured during the transaction");
+                return BadRequest("Amount greater than stock");
+            }
+            else if (result == ErrorValue.ServerError)
+            {
+                return BadRequest("Transaction error");
             }
             return Ok();
         }
@@ -84,9 +90,9 @@ namespace LGSA_Server.Controllers
 
             var offer = _buyAssembler.DtoToEntity(dto);
             var result = await _service.Add(offer);
-            if(result == false)
+            if(result == ErrorValue.ServerError)
             {
-                return BadRequest(ModelState);
+                return BadRequest("Transaction error");
             }
             dto = _buyAssembler.EntityToDto(offer);
             return Ok(dto);
@@ -108,7 +114,7 @@ namespace LGSA_Server.Controllers
 
             var result = await _service.Update(offer);
 
-            if (result == false)
+            if (result == ErrorValue.ServerError)
             {
                 return NotFound();
             }
@@ -132,7 +138,7 @@ namespace LGSA_Server.Controllers
 
             var result = await _service.Delete(offer);
 
-            if(result == false)
+            if(result == ErrorValue.ServerError)
             {
                 return NotFound();
             }

@@ -1,5 +1,6 @@
 ﻿using LGSA.Model.UnitOfWork;
 using LGSA_Server.Model;
+using LGSA_Server.Model.Enums;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -20,9 +21,8 @@ namespace LGSA.Model.Services
             _factory = factory;
         }
 
-        public async Task<bool> Add(buy_Offer entity)
+        public async Task<ErrorValue> Add(buy_Offer entity)
         {
-            bool success = true;
             using (var unitOfWork = _factory.CreateUnitOfWork())
             {
                 try
@@ -35,15 +35,14 @@ namespace LGSA.Model.Services
                 catch (DBConcurrencyException)
                 {
                     unitOfWork.Rollback();
-                    success = false;
+                    return ErrorValue.ServerError;
                 }
             }
-            return success;
+            return ErrorValue.NoError;
         }
 
-        public async Task<bool> Delete(buy_Offer entity)
+        public async Task<ErrorValue> Delete(buy_Offer entity)
         {
-            bool success = true;
             using (var unitOfWork = _factory.CreateUnitOfWork())
             {
                 try
@@ -56,10 +55,10 @@ namespace LGSA.Model.Services
                 catch (DBConcurrencyException)
                 {
                     unitOfWork.Rollback();
-                    success = false;
+                    return ErrorValue.ServerError;
                 }
             }
-            return success;
+            return ErrorValue.NoError;
         }
 
         public async Task<buy_Offer> GetById(int id)
@@ -95,9 +94,9 @@ namespace LGSA.Model.Services
             return null;
         }
 
-        public async Task<bool> Update(buy_Offer entity)
+        public async Task<ErrorValue> Update(buy_Offer entity)
         {
-            bool success = true;
+
             using (var unitOfWork = _factory.CreateUnitOfWork())
             {
                 try
@@ -110,10 +109,10 @@ namespace LGSA.Model.Services
                 catch (DBConcurrencyException)
                 {
                     unitOfWork.Rollback();
-                    success = false;
+                    return ErrorValue.ServerError;
                 }
             }
-            return success;
+            return ErrorValue.NoError;
         }
     }
 }

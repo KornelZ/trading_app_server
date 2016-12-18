@@ -1,5 +1,6 @@
 ﻿using LGSA.Model.UnitOfWork;
 using LGSA_Server.Model;
+using LGSA_Server.Model.Enums;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -20,14 +21,18 @@ namespace LGSA.Model.Services
             _factory = factory;
         }
 
-        public async Task<bool> Add(product entity)
+        public async Task<ErrorValue> Add(product entity)
         {
-            bool success = true;
             using (var unitOfWork = _factory.CreateUnitOfWork())
             {
                 try
                 {
                     unitOfWork.StartTransaction();
+                    var result = await unitOfWork.ProductRepository.GetData(p => p.product_owner == entity.product_owner && p.Name == entity.Name);
+                    if(result.Count() != 0)
+                    {
+                        return ErrorValue.EntityExists;
+                    }
                     unitOfWork.ProductRepository.Add(entity);
                     await unitOfWork.Save();
                     unitOfWork.Commit();
@@ -35,16 +40,14 @@ namespace LGSA.Model.Services
                 catch (DBConcurrencyException)
                 {
                     unitOfWork.Rollback();
-                    success = false;
+                    return ErrorValue.ServerError;
                 }
             }
-            return success;
+            return ErrorValue.NoError;
         }
 
-        public async Task<bool> Delete(product entity)
+        public async Task<ErrorValue> Delete(product entity)
         {
-
-            bool success = true;
             using (var unitOfWork = _factory.CreateUnitOfWork())
             {
                 try
@@ -57,15 +60,14 @@ namespace LGSA.Model.Services
                 catch (DBConcurrencyException)
                 {
                     unitOfWork.Rollback();
-                    success = false;
+                    return ErrorValue.ServerError;
                 }
             }
-            return success;
+            return ErrorValue.NoError;
         }
 
         public async Task<product> GetById(int id)
         {
-
             using (var unitOfWork = _factory.CreateUnitOfWork())
             {
                 try
@@ -98,9 +100,8 @@ namespace LGSA.Model.Services
             return null;
         }
 
-        public virtual async Task<bool> Update(product entity)
+        public virtual async Task<ErrorValue> Update(product entity)
         {
-            bool success = true;
             using (var unitOfWork = _factory.CreateUnitOfWork())
             {
                 try
@@ -113,11 +114,10 @@ namespace LGSA.Model.Services
                 catch (DBConcurrencyException)
                 {
                     unitOfWork.Rollback();
-                    success = false;
-
+                    return ErrorValue.ServerError;
                 }
             }
-            return success;
+            return ErrorValue.NoError;
         }
     }
     
