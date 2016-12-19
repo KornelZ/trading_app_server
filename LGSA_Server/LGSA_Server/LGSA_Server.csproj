@@ -129,6 +129,7 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\GlobalExceptionFilterAttribute.cs" />
     <Compile Include="App_Start\UnityResolver.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Authentication\AuthenticationAttribute.cs" />
@@ -213,7 +214,6 @@
     <Compile Include="Model\Repositories\Repository.cs" />
     <Compile Include="Model\Repositories\SellOfferRepository.cs" />
     <Compile Include="Model\Repositories\TransactionRepository.cs" />
-    <Compile Include="Model\Repositories\UserRepository.cs" />
     <Compile Include="Model\sell_Offer.cs">
       <DependentUpon>MainDatabaseModel.tt</DependentUpon>
     </Compile>

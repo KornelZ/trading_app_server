@@ -22,16 +22,25 @@ namespace LGSA_Server.Authentication
         }
         public async Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
         {
-            var response = await Result.ExecuteAsync(cancellationToken);
-
-            if(response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            try
             {
-                if(!response.Headers.WwwAuthenticate.Any(h => h.Scheme == Challenge.Scheme))
+                var response = await Result.ExecuteAsync(cancellationToken);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    response.Headers.WwwAuthenticate.Add(Challenge);
+                    if (!response.Headers.WwwAuthenticate.Any(h => h.Scheme == Challenge.Scheme))
+                    {
+                        response.Headers.WwwAuthenticate.Add(Challenge);
+                    }
                 }
+                return response;
             }
-            return response;
+            catch(Exception)
+            {
+                var message = new HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);
+                message.Content = new StringContent("Failed to authorize.");
+                return message;
+            }
         }
     }
 }

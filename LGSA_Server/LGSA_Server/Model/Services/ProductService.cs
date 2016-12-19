@@ -99,7 +99,16 @@ namespace LGSA.Model.Services
             }
             return null;
         }
-
+        protected virtual async Task<bool> CanUpdate(product entity, IUnitOfWork unitOfWork)
+        {
+            var offers = await unitOfWork.SellOfferRepository.GetData(b => b.product_id == entity.ID && b.status_id != 3);
+            var totalAmount = offers.Sum(b => b.amount);
+            if(totalAmount > entity.stock)
+            {
+                return false;
+            }
+            return true;
+        }
         public virtual async Task<ErrorValue> Update(product entity)
         {
             using (var unitOfWork = _factory.CreateUnitOfWork())
@@ -107,7 +116,17 @@ namespace LGSA.Model.Services
                 try
                 {
                     unitOfWork.StartTransaction();
-                    unitOfWork.ProductRepository.Update(entity);
+                    var prod = await unitOfWork.ProductRepository.GetById(entity.ID);
+                    if(prod == null)
+                    {
+                        return ErrorValue.ServerError;
+                    }
+                    prod = entity;
+                    var canUpdate = await CanUpdate(entity, unitOfWork);
+                    if(canUpdate == false)
+                    {
+                        return ErrorValue.AmountGreaterThanStock;
+                    }
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }

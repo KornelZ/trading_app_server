@@ -139,8 +139,16 @@ namespace LGSA_Server.Authentication
 
         public Task ChallengeAsync(HttpAuthenticationChallengeContext ctx, CancellationToken token)
         {
-            var challenge = new AuthenticationHeaderValue(Scheme);
-            ctx.Result = new ChallengeOnUnAuthorizedResult(challenge, ctx.Result);
+            try
+            {
+                var challenge = new AuthenticationHeaderValue(Scheme);
+                ctx.Result = new ChallengeOnUnAuthorizedResult(challenge, ctx.Result);
+            }
+            catch(Exception)
+            {
+
+            }
+
             return Task.FromResult(0);
         }
     }

@@ -25,6 +25,7 @@ namespace LGSA_Server
             jsonSettings.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
 
             config.Formatters.Remove(config.Formatters.XmlFormatter);
+            config.Filters.Add(new GlobalExceptionFilterAttribute());
             // Web API routes
             config.MapHttpAttributeRoutes();
 

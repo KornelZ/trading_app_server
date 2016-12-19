@@ -97,6 +97,11 @@ namespace LGSA_Server.Controllers
             {
                 return NotFound();
             }
+            else if(result == ErrorValue.AmountGreaterThanStock)
+            {
+                return BadRequest("Amount greater than stock");
+            }
+
             dto = _assembler.EntityToDto(product);
             return Ok(dto);
         }
