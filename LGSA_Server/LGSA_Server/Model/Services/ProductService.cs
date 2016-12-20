@@ -121,12 +121,20 @@ namespace LGSA.Model.Services
                     {
                         return ErrorValue.ServerError;
                     }
-                    prod = entity;
+                    
                     var canUpdate = await CanUpdate(entity, unitOfWork);
                     if(canUpdate == false)
                     {
                         return ErrorValue.AmountGreaterThanStock;
                     }
+                    prod.condition_id = entity.condition_id;
+                    prod.genre_id = entity.genre_id;
+                    prod.rating = entity.rating;
+                    prod.sold_copies = entity.sold_copies;
+                    prod.stock = entity.stock;
+                    prod.Update_Date = DateTime.Now;
+                    prod.product_type_id = entity.product_type_id;
+                    prod.Name = entity.Name;
                     await unitOfWork.Save();
                     unitOfWork.Commit();
                 }

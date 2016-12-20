@@ -4,48 +4,48 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="e63ecc712c3248859b6a64495fee1438" Name="Diagram1">
-        <EntityTypeShape EntityType="MainDatabaseModel.buy_Offer" Width="1.5" PointX="7.5" PointY="13.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="MainDatabaseModel.dic_condition" Width="1.5" PointX="5.25" PointY="10.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="MainDatabaseModel.dic_Genre" Width="1.5" PointX="5.25" PointY="13.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="MainDatabaseModel.dic_Offer_status" Width="1.5" PointX="5.25" PointY="16.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="MainDatabaseModel.dic_Product_type" Width="1.5" PointX="5.25" PointY="19.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="MainDatabaseModel.dic_Transaction_status" Width="1.5" PointX="5.25" PointY="22.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="MainDatabaseModel.product" Width="1.5" PointX="10.5" PointY="14" IsExpanded="true" />
-        <EntityTypeShape EntityType="MainDatabaseModel.sell_Offer" Width="1.5" PointX="12.75" PointY="13.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="MainDatabaseModel.transactions" Width="1.5" PointX="15" PointY="16.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="MainDatabaseModel.UserAddress" Width="1.5" PointX="0.75" PointY="13.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="MainDatabaseModel.users" Width="1.5" PointX="3" PointY="11.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="MainDatabaseModel.users_Authetication" Width="1.5" PointX="5.25" PointY="25.875" IsExpanded="true" />
-        <AssociationConnector Association="MainDatabaseModel.buy_offer_buyer_id_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.buy_offer_product_id_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.buy_offer_status_id_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.buy_offer_Update_Who_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.Transaction_buy_offer_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.dic_condition_Update_Who_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.Product_condition_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.dic_genre_Update_Who_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.Product_genre_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.dic_offer_status_Update_Who_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.sell_offer_status_id_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.dic_product_type_Update_Who_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.Product_product_type_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.dic_transaction_status_Update_Who_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.Transaction_status_id_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.Product_product_owner_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.Product_Update_Who_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.sell_offer_product_id_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.sell_offer_seller_id_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.sell_offer_Update_Who_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.Transaction_sell_offer_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.Transaction_buyer_id_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.Transaction_seller_id_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.Transaction_Update_Who_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.User_Address_Update_Who_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.Users_Address_ID_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.Users_Authentication_Update_Who_fk" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.Users_Authentication_user_id" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDatabaseModel.Users_Update_Who_fk" ManuallyRouted="false" />
+      <Diagram DiagramId="7ffa9f7db69a40e3bae22ac95ad5183d" Name="Diagram1">
+        <EntityTypeShape EntityType="Model.buy_Offer" Width="1.5" PointX="7.5" PointY="13.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.dic_condition" Width="1.5" PointX="5.25" PointY="10.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.dic_Genre" Width="1.5" PointX="5.25" PointY="13.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.dic_Offer_status" Width="1.5" PointX="5.25" PointY="16.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.dic_Product_type" Width="1.5" PointX="5.25" PointY="19.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.dic_Transaction_status" Width="1.5" PointX="5.25" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.product" Width="1.5" PointX="10.5" PointY="14" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.sell_Offer" Width="1.5" PointX="12.75" PointY="13.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.transactions" Width="1.5" PointX="15" PointY="16.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.UserAddress" Width="1.5" PointX="0.75" PointY="13.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.users" Width="1.5" PointX="3" PointY="11.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.users_Authetication" Width="1.5" PointX="5.25" PointY="25.875" IsExpanded="true" />
+        <AssociationConnector Association="Model.buy_offer_buyer_id_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.buy_offer_product_id_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.buy_offer_status_id_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.buy_offer_Update_Who_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.Transaction_buy_offer_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.dic_condition_Update_Who_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.Product_condition_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.dic_genre_Update_Who_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.Product_genre_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.dic_offer_status_Update_Who_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.sell_offer_status_id_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.dic_product_type_Update_Who_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.Product_product_type_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.dic_transaction_status_Update_Who_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.Transaction_status_id_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.Product_product_owner_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.Product_Update_Who_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.sell_offer_product_id_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.sell_offer_seller_id_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.sell_offer_Update_Who_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.Transaction_sell_offer_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.Transaction_buyer_id_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.Transaction_seller_id_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.Transaction_Update_Who_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.User_Address_Update_Who_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.Users_Address_ID_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.Users_Authentication_Update_Who_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.Users_Authentication_user_id" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.Users_Update_Who_fk" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

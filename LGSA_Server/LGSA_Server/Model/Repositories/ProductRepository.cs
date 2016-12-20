@@ -19,11 +19,12 @@ namespace LGSA.Model.Repositories
         {
             Attach(_context, entity);
            
-            return  base.Add(entity);
+            return base.Add(entity);
         }
 
         public override bool Update(product entity)
         {
+            _context.Set<product>().Attach(entity);
             Attach(_context, entity);
             return base.Update(entity);
         }
