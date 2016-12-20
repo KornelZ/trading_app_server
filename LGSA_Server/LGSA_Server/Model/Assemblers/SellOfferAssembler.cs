@@ -9,9 +9,11 @@ namespace LGSA_Server.Model.Assemblers
     public class SellOfferAssembler : ITwoWayAssembler<sell_Offer, SellOfferDto>
     {
         private ITwoWayAssembler<product, ProductDto> _assembler;
-        public SellOfferAssembler(ITwoWayAssembler<product, ProductDto> assembler)
+        private ITwoWayAssembler<users, UserDto> _userAssembler;
+        public SellOfferAssembler(ITwoWayAssembler<product, ProductDto> assembler, ITwoWayAssembler<users, UserDto> userAssembler)
         {
             _assembler = assembler;
+            _userAssembler = userAssembler;
         }
         public IEnumerable<sell_Offer> DtoToEntity(IEnumerable<SellOfferDto> dto)
         {
@@ -51,7 +53,8 @@ namespace LGSA_Server.Model.Assemblers
                 Name = entity.name,
                 Price = (decimal?)entity.price,
                 ProductId = entity.product_id,
-                Product = _assembler.EntityToDto(entity.product)
+                Product = _assembler.EntityToDto(entity.product),
+                User = _userAssembler.EntityToDto(entity.users),
             };
         }
     }

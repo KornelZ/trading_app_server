@@ -20,5 +20,6 @@ namespace LGSA_Server.Model.DTO
         [Required]
         public int ProductId { get; set; }
         public ProductDto Product { get; set; }
+        public UserDto User { get; set; }
     }
 }

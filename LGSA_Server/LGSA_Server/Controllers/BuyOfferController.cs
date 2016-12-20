@@ -30,10 +30,12 @@ namespace LGSA_Server.Controllers
 
             _buyAssembler = new BuyOfferAssembler(new ProductAssembler(new ConditionAssembler(),
                                                                     new GenreAssembler(),
-                                                                    new ProductTypeAssembler()));
+                                                                    new ProductTypeAssembler()),
+                                                  new UserAssembler(new AddressAssembler()));
             _sellAssembler = new SellOfferAssembler(new ProductAssembler(new ConditionAssembler(),
                                                                     new GenreAssembler(),
-                                                                    new ProductTypeAssembler()));
+                                                                    new ProductTypeAssembler()),
+                                                    new UserAssembler(new AddressAssembler()));
             _transactionService = new TransactionService(factory, ratingUpdater);
         }
         [Authentication.Authentication]

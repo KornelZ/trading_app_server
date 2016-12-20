@@ -11,17 +11,20 @@ using LinqKit;
 
 namespace LGSA.Model.Repositories
 {
-    public class AuthenticationRepository : Repository<users_Authetication>
+    public class AuthenticationRepository : IRepository<users_Authetication>
     {
-        public AuthenticationRepository(DbContext context) : base(context)
+        protected DbContext _context;
+        public AuthenticationRepository(DbContext context)
         {
+            _context = context;
         }
-        public override bool Update(users_Authetication entity)
+        public virtual bool Update(users_Authetication entity)
         {
             Attach(_context, entity);
-            return base.Update(entity);
+            _context.Entry(entity).State = EntityState.Modified;
+            return true;
         }
-        public override Task<users_Authetication> GetById(int id)
+        public virtual Task<users_Authetication> GetById(int id)
         {
 
             return _context.Set<users_Authetication>()
@@ -29,7 +32,7 @@ namespace LGSA.Model.Repositories
                 .Include(users_Authetication => users_Authetication.users1.UserAddress1)
                 .Where(u => u.User_id == id).SingleOrDefaultAsync();
         }
-        public override users_Authetication Add(users_Authetication entity)
+        public virtual users_Authetication Add(users_Authetication entity)
         {
             if(_context.Set<users_Authetication>()
                 .Include(users_Authetication => users_Authetication.users1)
@@ -40,9 +43,9 @@ namespace LGSA.Model.Repositories
                 return null;
             }
             Attach(_context, entity);
-            return base.Add(entity);
+            return _context.Set<users_Authetication>().Add(entity);
         }
-        public override async Task<IEnumerable<users_Authetication>> GetData(Expression<Func<users_Authetication, bool>> filter)
+        public virtual async Task<IEnumerable<users_Authetication>> GetData(Expression<Func<users_Authetication, bool>> filter)
         {
             if (filter == null)
             {
@@ -71,6 +74,12 @@ namespace LGSA.Model.Repositories
                     }
                 }
             }
+        }
+
+        public bool Delete(users_Authetication entity)
+        {
+            _context.Entry(entity).State = EntityState.Deleted;
+            return true;
         }
     }
 }

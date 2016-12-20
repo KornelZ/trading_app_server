@@ -30,11 +30,13 @@ namespace LGSA_Server.Controllers
             _transactionService = new TransactionService(factory, ratingUpdater);
             _sellAssembler = new SellOfferAssembler(new ProductAssembler(new ConditionAssembler(),
                                                                     new GenreAssembler(),
-                                                                    new ProductTypeAssembler()));
+                                                                    new ProductTypeAssembler()),
+                                                    new UserAssembler(new AddressAssembler()));
 
             _buyAssembler = new BuyOfferAssembler(new ProductAssembler(new ConditionAssembler(),
                                                                     new GenreAssembler(),
-                                                                    new ProductTypeAssembler()));
+                                                                    new ProductTypeAssembler()),
+                                                  new UserAssembler(new AddressAssembler()));
         }
         [Authentication.Authentication]
         [HttpPost, Route("AcceptSellTransaction/")]

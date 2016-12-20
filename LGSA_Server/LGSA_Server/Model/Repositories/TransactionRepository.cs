@@ -10,17 +10,19 @@ using System.Threading.Tasks;
 
 namespace LGSA.Model.Repositories
 {
-    public class TransactionRepository : Repository<transactions>
+    public class TransactionRepository : IRepository<transactions>
     {
-        public TransactionRepository(DbContext context) : base(context)
+        protected DbContext _context;
+        public TransactionRepository(DbContext context)
         {
+            _context = context;
         }
-        public override transactions Add(transactions entity)
+        public virtual transactions Add(transactions entity)
         {
             Attach(_context, entity);
-            return base.Add(entity);
+            return _context.Set<transactions>().Add(entity);
         }
-        public override async Task<IEnumerable<transactions>> GetData(Expression<Func<transactions, bool>> filter)
+        public virtual async Task<IEnumerable<transactions>> GetData(Expression<Func<transactions, bool>> filter)
         {
             return await _context.Set<transactions>()
                 .Include(transactions => transactions.users)
@@ -79,6 +81,23 @@ namespace LGSA.Model.Repositories
                     ctx.Set<dic_Transaction_status>().Attach(entity.dic_Transaction_status);
                 }
             }
+        }
+
+        public async Task<transactions> GetById(int id)
+        {
+            return await _context.Set<transactions>().FindAsync(id);
+        }
+
+        public bool Update(transactions entity)
+        {
+            _context.Entry(entity).State = EntityState.Modified;
+            return true;
+        }
+
+        public bool Delete(transactions entity)
+        {
+            _context.Entry(entity).State = EntityState.Deleted;
+            return true;
         }
     }
 }

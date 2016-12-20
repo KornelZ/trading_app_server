@@ -10,25 +10,28 @@ using System.Threading.Tasks;
 
 namespace LGSA.Model.Repositories
 {
-    public class ProductRepository : Repository<product>
+    public class ProductRepository : IRepository<product>
     {
-        public ProductRepository(DbContext context) : base(context)
+        protected DbContext _context;
+        public ProductRepository(DbContext context)
         {
+            _context = context;
         }
-        public override product Add(product entity)
+        public virtual product Add(product entity)
         {
             Attach(_context, entity);
            
-            return base.Add(entity);
+            return _context.Set<product>().Add(entity);
         }
 
-        public override bool Update(product entity)
+        public virtual bool Update(product entity)
         {
             _context.Set<product>().Attach(entity);
             Attach(_context, entity);
-            return base.Update(entity);
+            _context.Entry(entity).State = EntityState.Modified;
+            return true;
         }
-        public override async Task<IEnumerable<product>> GetData(Expression<Func<product, bool>> filter)
+        public virtual async Task<IEnumerable<product>> GetData(Expression<Func<product, bool>> filter)
         {
 
             var products = _context.Set<product>()
@@ -63,6 +66,17 @@ namespace LGSA.Model.Repositories
             {
                 ctx.Entry(entity.dic_Product_type).State = EntityState.Modified;
             }
+        }
+
+        public async Task<product> GetById(int id)
+        {
+            return await _context.Set<product>().FindAsync(id);
+        }
+
+        public bool Delete(product entity)
+        {
+            _context.Entry(entity).State = EntityState.Deleted;
+            return true;
         }
     }
 }

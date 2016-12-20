@@ -10,24 +10,27 @@ using System.Threading.Tasks;
 
 namespace LGSA.Model.Repositories
 {
-    public class SellOfferRepository : Repository<sell_Offer>
+    public class SellOfferRepository : IRepository<sell_Offer>
     {
-        public SellOfferRepository(DbContext context) : base(context)
+        protected DbContext _context;
+        public SellOfferRepository(DbContext context)
         {
-        }
-        public override sell_Offer Add(sell_Offer entity)
+            _context = context;
+        }        
+        public virtual sell_Offer Add(sell_Offer entity)
         {
             Attach(_context, entity);
             _context.Set<sell_Offer>().Include(b => b.product);
             
-            return base.Add(entity);
+            return _context.Set<sell_Offer>().Add(entity); ;
         }
-        public override bool Update(sell_Offer entity)
+        public virtual bool Update(sell_Offer entity)
         {
             Attach(_context, entity);
-            return base.Update(entity);
+            _context.Entry(entity).State = EntityState.Modified;
+            return true;
         }
-        public override async Task<IEnumerable<sell_Offer>> GetData(Expression<Func<sell_Offer, bool>> filter)
+        public virtual async Task<IEnumerable<sell_Offer>> GetData(Expression<Func<sell_Offer, bool>> filter)
         {
             return await _context.Set<sell_Offer>()
                 .Include(sell_Offer => sell_Offer.users)
@@ -40,7 +43,7 @@ namespace LGSA.Model.Repositories
                 .Where(filter).ToListAsync();
         }
 
-        public override async Task<sell_Offer> GetById(int id)
+        public virtual async Task<sell_Offer> GetById(int id)
         {
             return await _context.Set<sell_Offer>()
                 .Include(sell_Offer => sell_Offer.users)
@@ -49,6 +52,8 @@ namespace LGSA.Model.Repositories
                 .Include(sell_Offer => sell_Offer.product.dic_condition)
                 .Include(sell_Offer => sell_Offer.product.dic_Product_type)
                 .Include(sell_Offer => sell_Offer.dic_Offer_status)
+                .Include(sell_Offer => sell_Offer.users)
+                .Include(sell_Offer => sell_Offer.users.UserAddress)
                 .FirstOrDefaultAsync(b => b.ID == id);
         }
 
@@ -67,6 +72,12 @@ namespace LGSA.Model.Repositories
                 ctx.Set<product>().Attach(entity.product);
                 ProductRepository.Attach(ctx, entity.product);
             }
+        }
+
+        public bool Delete(sell_Offer entity)
+        {
+            _context.Entry(entity).State = EntityState.Deleted;
+            return true;
         }
     }
 }
