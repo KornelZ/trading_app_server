@@ -46,7 +46,7 @@ namespace LGSA_Server.Controllers
             }
             if (dto.SellOffer.SellerId != (Thread.CurrentPrincipal as UserPrincipal).Id)
             {
-                return BadRequest("Internal error");
+                return Unauthorized();
             }
 
             var sellOffer = _sellAssembler.DtoToEntity(dto.SellOffer);
@@ -81,11 +81,11 @@ namespace LGSA_Server.Controllers
         {
             if(ModelState.IsValid == false)
             {
-                return BadRequest(ModelState);
+                return BadRequest("Invalid data");
             }
             if (dto.BuyerId != (Thread.CurrentPrincipal as UserPrincipal).Id)
             {
-                return BadRequest("Internal error");
+                return Unauthorized();
             }
 
             var offer = _buyAssembler.DtoToEntity(dto);
@@ -103,11 +103,11 @@ namespace LGSA_Server.Controllers
         {
             if (ModelState.IsValid == false)
             {
-                return BadRequest(ModelState);
+                return BadRequest("Invalid data");
             }
             if (dto.BuyerId != (Thread.CurrentPrincipal as UserPrincipal).Id)
             {
-                return BadRequest("Internal error");
+                return Unauthorized();
             }
 
             var offer = _buyAssembler.DtoToEntity(dto);
@@ -116,7 +116,7 @@ namespace LGSA_Server.Controllers
 
             if (result == ErrorValue.ServerError)
             {
-                return NotFound();
+                return BadRequest("Entity not found");
             }
             dto = _buyAssembler.EntityToDto(offer);
             return Ok(dto);
@@ -127,11 +127,11 @@ namespace LGSA_Server.Controllers
         {
             if(ModelState.IsValid == false)
             {
-                return BadRequest(ModelState);
+                return BadRequest("Invalid data");
             }
             if (dto.BuyerId != (Thread.CurrentPrincipal as UserPrincipal).Id)
             {
-                return BadRequest("Internal error");
+                return Unauthorized();
             }
 
             var offer = _buyAssembler.DtoToEntity(dto);
@@ -140,7 +140,7 @@ namespace LGSA_Server.Controllers
 
             if(result == ErrorValue.ServerError)
             {
-                return NotFound();
+                return BadRequest("Entity not found");
             }
 
             return Ok();

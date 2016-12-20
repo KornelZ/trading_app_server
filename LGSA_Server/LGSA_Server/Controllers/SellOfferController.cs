@@ -42,11 +42,11 @@ namespace LGSA_Server.Controllers
         {
             if (ModelState.IsValid == false)
             {
-                return BadRequest(ModelState);
+                return BadRequest("Invalid data");
             }
             if (dto.BuyOffer.BuyerId != (Thread.CurrentPrincipal as UserPrincipal).Id)
             {
-                return BadRequest("Internal error");
+                return Unauthorized();
             }
 
             var sellOffer = _sellAssembler.DtoToEntity(dto.SellOffer);
@@ -81,11 +81,11 @@ namespace LGSA_Server.Controllers
         {
             if (ModelState.IsValid == false)
             {
-                return BadRequest(ModelState);
+                return BadRequest("Invalid data");
             }
             if (dto.SellerId != (Thread.CurrentPrincipal as UserPrincipal).Id)
             {
-                return BadRequest("Internal error");
+                return Unauthorized();
             }
 
             var offer = _sellAssembler.DtoToEntity(dto);
@@ -108,11 +108,11 @@ namespace LGSA_Server.Controllers
         {
             if (ModelState.IsValid == false)
             {
-                return BadRequest(ModelState);
+                return BadRequest("Invalid data");
             }
             if (dto.SellerId != (Thread.CurrentPrincipal as UserPrincipal).Id)
             {
-                return BadRequest("Internal error");
+                return Unauthorized();
             }
 
             var offer = _sellAssembler.DtoToEntity(dto);
@@ -136,11 +136,11 @@ namespace LGSA_Server.Controllers
         {
             if (ModelState.IsValid == false)
             {
-                return BadRequest(ModelState);
+                return BadRequest("Invalid data");
             }
             if (dto.SellerId != (Thread.CurrentPrincipal as UserPrincipal).Id)
             {
-                return BadRequest("Internal error");
+                return Unauthorized();
             }
 
             var offer = _sellAssembler.DtoToEntity(dto);
@@ -149,7 +149,7 @@ namespace LGSA_Server.Controllers
 
             if (result == ErrorValue.ServerError)
             {
-                return NotFound();
+                return BadRequest("Entity not found");
             }
 
             return Ok();

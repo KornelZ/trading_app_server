@@ -32,7 +32,7 @@ namespace LGSA_Server.Controllers
         {
             if (ModelState.IsValid == false)
             {
-                return BadRequest(ModelState);
+                return BadRequest("Invalid data");
             }
 
             var user = await _service.GetData(u => u.password == dto.Password && u.users1.UserName == dto.User.UserName);
@@ -52,7 +52,7 @@ namespace LGSA_Server.Controllers
             var user = await _service.GetById(id);
             if(user == null)
             {
-                return NotFound();
+                return BadRequest("Entity not found");
             }
 
             var info = _userAssembler.EntityToDto(user.users1);
@@ -65,7 +65,7 @@ namespace LGSA_Server.Controllers
         {
             if (ModelState.IsValid == false)
             {
-                return BadRequest(ModelState);
+                return BadRequest("Invalid data");
             }
             var user = _assembler.DtoToEntity(dto);
 
@@ -85,11 +85,11 @@ namespace LGSA_Server.Controllers
         {
             if(ModelState.IsValid == false)
             {
-                return BadRequest(ModelState);
+                return BadRequest("Invalid data");
             }
             if(dto.User.Id != (Thread.CurrentPrincipal as UserPrincipal).Id)
             {
-                return BadRequest("Internal error");
+                return Unauthorized();
             }
 
             var user = _assembler.DtoToEntity(dto);

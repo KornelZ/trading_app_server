@@ -53,7 +53,7 @@ namespace LGSA_Server.Controllers
         {
             if(ModelState.IsValid == false)
             {
-                return BadRequest(ModelState);
+                return Unauthorized();
             }
             if (dto.ProductOwner != (Thread.CurrentPrincipal as UserPrincipal).Id)
             {
@@ -82,11 +82,11 @@ namespace LGSA_Server.Controllers
         {
             if (ModelState.IsValid == false)
             {
-                return BadRequest(ModelState);
+                return BadRequest("Invalid data");
             }
             if (dto.ProductOwner != (Thread.CurrentPrincipal as UserPrincipal).Id)
             {
-                return BadRequest("Internal error");
+                return Unauthorized();
             }
 
             var product = _assembler.DtoToEntity(dto);
@@ -95,7 +95,7 @@ namespace LGSA_Server.Controllers
 
             if(result == ErrorValue.ServerError)
             {
-                return NotFound();
+                return BadRequest("Entity not found");
             }
             else if(result == ErrorValue.AmountGreaterThanStock)
             {
