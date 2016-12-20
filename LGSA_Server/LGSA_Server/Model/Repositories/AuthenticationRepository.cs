@@ -34,8 +34,8 @@ namespace LGSA.Model.Repositories
             if(_context.Set<users_Authetication>()
                 .Include(users_Authetication => users_Authetication.users1)
                 .Include(users_Authetication => users_Authetication.users1.UserAddress1)
-                .Any(u => u.users1.First_Name == entity.users1.First_Name &&
-                u.users1.Last_Name == entity.users1.Last_Name))
+                .Any(u => (u.users1.First_Name == entity.users1.First_Name &&
+                u.users1.Last_Name == entity.users1.Last_Name) || u.users1.UserName == entity.users1.UserName))
             {
                 return null;
             }
