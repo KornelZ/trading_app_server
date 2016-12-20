@@ -53,11 +53,11 @@ namespace LGSA_Server.Controllers
         {
             if(ModelState.IsValid == false)
             {
-                return Unauthorized();
+                return BadRequest("Invalid data");
             }
             if (dto.ProductOwner != (Thread.CurrentPrincipal as UserPrincipal).Id)
             {
-                return BadRequest("Internal error");
+                return Unauthorized();
             }
 
             var product = _assembler.DtoToEntity(dto);

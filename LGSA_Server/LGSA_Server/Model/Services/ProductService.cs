@@ -28,6 +28,7 @@ namespace LGSA.Model.Services
                 try
                 {
                     unitOfWork.StartTransaction();
+                    NullProperties(entity);
                     var result = await unitOfWork.ProductRepository.GetData(p => p.product_owner == entity.product_owner && p.Name == entity.Name);
                     if(result.Count() != 0)
                     {
@@ -53,6 +54,7 @@ namespace LGSA.Model.Services
                 try
                 {
                     unitOfWork.StartTransaction();
+                    NullProperties(entity);
                     unitOfWork.ProductRepository.Delete(entity);
                     await unitOfWork.Save();
                     unitOfWork.Commit();
@@ -116,6 +118,7 @@ namespace LGSA.Model.Services
                 try
                 {
                     unitOfWork.StartTransaction();
+                    NullProperties(entity);
                     var prod = await unitOfWork.ProductRepository.GetById(entity.ID);
                     if(prod == null)
                     {
@@ -146,6 +149,15 @@ namespace LGSA.Model.Services
             }
             return ErrorValue.NoError;
         }
+        protected virtual void NullProperties(product entity)
+        {
+            entity.dic_condition = null;
+            entity.dic_Genre = null;
+            entity.dic_Product_type = null;
+            entity.users = null;
+            entity.users1 = null;
+        }
+
     }
     
 }

@@ -121,7 +121,7 @@ namespace LGSA_Server.Controllers
 
             if (result == ErrorValue.ServerError)
             {
-                return NotFound();
+                return BadRequest("Not found");
             }
             else if(result == ErrorValue.AmountGreaterThanStock)
             {

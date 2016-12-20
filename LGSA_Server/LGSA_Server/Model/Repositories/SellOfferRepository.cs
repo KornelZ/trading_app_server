@@ -17,8 +17,9 @@ namespace LGSA.Model.Repositories
         }
         public override sell_Offer Add(sell_Offer entity)
         {
-            _context.Set<sell_Offer>().Include(b => b.product);
             Attach(_context, entity);
+            _context.Set<sell_Offer>().Include(b => b.product);
+            
             return base.Add(entity);
         }
         public override bool Update(sell_Offer entity)

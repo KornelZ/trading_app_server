@@ -30,6 +30,19 @@ namespace LGSA.Model.Services
             _factory = factory;
             _ratingUpdater = ratingUpdater;
         }
+
+        protected virtual void NullProperties(sell_Offer sellOffer, buy_Offer buyOffer)
+        {
+            sellOffer.dic_Offer_status = null;
+            sellOffer.users1 = null;
+            sellOffer.users = null;
+            sellOffer.product = null;
+
+            buyOffer.dic_Offer_status = null;
+            buyOffer.product = null;
+            buyOffer.users = null;
+            buyOffer.users1 = null;
+        }
         public async Task<ErrorValue> AcceptSellTransaction(sell_Offer sellOffer, buy_Offer buyOffer, int? rating)
         {
             using (var unitOfWork = _factory.CreateUnitOfWork())
@@ -37,6 +50,7 @@ namespace LGSA.Model.Services
                 try
                 {
                     unitOfWork.StartTransaction();
+                    NullProperties(sellOffer, buyOffer);
                     //get actual sellOffer from database
                     sellOffer = await unitOfWork.SellOfferRepository.GetById(sellOffer.ID);
                     if(sellOffer.status_id == 3)
@@ -130,6 +144,7 @@ namespace LGSA.Model.Services
                 try
                 {
                     unitOfWork.StartTransaction();
+                    NullProperties(sellOffer, buyOffer);
                     buyOffer = await unitOfWork.BuyOfferRepository.GetById(buyOffer.ID);
                     if(buyOffer.status_id == 3)
                     {

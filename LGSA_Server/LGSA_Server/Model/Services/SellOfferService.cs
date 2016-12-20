@@ -28,6 +28,7 @@ namespace LGSA.Model.Services
                 try
                 {
                     unitOfWork.StartTransaction();
+                    NullProperties(entity);
                     var canAdd = await CanAddOffer(entity, unitOfWork);
                     if(canAdd == false)
                     {
@@ -80,6 +81,7 @@ namespace LGSA.Model.Services
                 try
                 {
                     unitOfWork.StartTransaction();
+                    NullProperties(entity);
                     unitOfWork.SellOfferRepository.Delete(entity);
                     await unitOfWork.Save();
                     unitOfWork.Commit();
@@ -91,6 +93,14 @@ namespace LGSA.Model.Services
                 }
             }
             return ErrorValue.NoError;
+        }
+
+        protected virtual void NullProperties(sell_Offer entity)
+        {
+            entity.dic_Offer_status = null;
+            entity.product = null;
+            entity.users = null;
+            entity.users1 = null;
         }
 
         public async Task<sell_Offer> GetById(int id)
@@ -133,6 +143,7 @@ namespace LGSA.Model.Services
                 try
                 {
                     unitOfWork.StartTransaction();
+                    NullProperties(entity);
                     var canAdd = await CanUpdateOffer(entity, unitOfWork);
                     if (canAdd == false)
                     {
