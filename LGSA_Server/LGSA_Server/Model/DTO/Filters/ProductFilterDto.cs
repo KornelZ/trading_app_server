@@ -25,7 +25,7 @@ namespace LGSA_Server.Model.DTO.Filters
             builder.And(p => p.product_owner == userId && p.stock >= Stock);
             if(Rating != 0)
             {
-                builder.And(p => p.rating >= Rating);
+                builder.And(p => p.rating >= Rating || p.users.Rating == null);
             }
             if(ProductName != null)
             {

@@ -162,7 +162,6 @@
     <Compile Include="Authentication\AuthenticationAttribute.cs" />
     <Compile Include="Authentication\ChallengeOnUnAuthorizedResult.cs" />
     <Compile Include="Authentication\ErrorResult.cs" />
-    <Compile Include="Authentication\HttpsOnlyAttribute.cs" />
     <Compile Include="Authentication\UserPrincipal.cs" />
     <Compile Include="Controllers\BuyOfferController.cs" />
     <Compile Include="Controllers\DictionaryController.cs" />
@@ -284,8 +283,7 @@
     <Content Include="Model\MainDatabaseModel.edmx.diagram">
       <DependentUpon>MainDatabaseModel.edmx</DependentUpon>
     </Content>
-    <None Include="Properties\PublishProfiles\LGSA-Server - Web Deploy.pubxml" />
-    <None Include="Properties\PublishProfiles\LGSAServer - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\lgsa2 - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

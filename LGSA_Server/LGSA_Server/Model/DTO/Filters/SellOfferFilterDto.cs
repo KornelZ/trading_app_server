@@ -28,7 +28,7 @@ namespace LGSA_Server.Model.DTO.Filters
             builder.And(b => b.product.stock > Stock && b.status_id == 1);
             if(Rating != 0)
             {
-                builder.And(b => b.users.Rating >= Rating);
+                builder.And(b => b.users.Rating >= Rating || b.users.Rating == null);
             }
             if (ShowMyOffers == true)
             {

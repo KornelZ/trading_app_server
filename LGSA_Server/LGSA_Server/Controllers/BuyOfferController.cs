@@ -17,7 +17,6 @@ using System.Web.Http;
 
 namespace LGSA_Server.Controllers
 {
-    [Authentication.Authentication]
     public class BuyOfferController : ApiController
     {
         private ITwoWayAssembler<buy_Offer, BuyOfferDto> _buyAssembler;
@@ -38,7 +37,7 @@ namespace LGSA_Server.Controllers
                                                     new UserAssembler(new AddressAssembler()));
             _transactionService = new TransactionService(factory, ratingUpdater);
         }
-        [Authentication.Authentication, HttpsOnly]
+        [Authentication.Authentication]
         [HttpPost, Route("AcceptBuyTransaction/")]
         public async Task<IHttpActionResult> AcceptBuyTransaction([FromBody] TransactionDto dto)
         {
@@ -67,7 +66,7 @@ namespace LGSA_Server.Controllers
             }
             return Ok();
         }
-        [Authentication.Authentication, HttpsOnly]
+        [Authentication.Authentication]
         [HttpGet]
         public async Task<IHttpActionResult> Get([FromUri] BuyOfferFilterDto filter)
         {
@@ -77,7 +76,7 @@ namespace LGSA_Server.Controllers
 
             return Ok(dto);
         }
-        [Authentication.Authentication, HttpsOnly]
+        [Authentication.Authentication]
         [HttpPost]
         public async Task<IHttpActionResult> Post([FromBody] BuyOfferDto dto)
         {
@@ -99,7 +98,7 @@ namespace LGSA_Server.Controllers
             dto = _buyAssembler.EntityToDto(offer);
             return Ok(dto);
         }
-        [Authentication.Authentication, HttpsOnly]
+        [Authentication.Authentication]
         [HttpPut]
         public async Task<IHttpActionResult> Put([FromBody] BuyOfferDto dto)
         {
@@ -123,7 +122,7 @@ namespace LGSA_Server.Controllers
             dto = _buyAssembler.EntityToDto(offer);
             return Ok(dto);
         }
-        [Authentication.Authentication, HttpsOnly]
+        [Authentication.Authentication]
         [HttpDelete]
         public async Task<IHttpActionResult> Delete([FromBody] BuyOfferDto dto)
         {

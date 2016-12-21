@@ -17,7 +17,6 @@ using System.Web.Http;
 
 namespace LGSA_Server.Controllers
 {
-    [Authentication.Authentication]
     public class SellOfferController : ApiController
     {
         private ITwoWayAssembler<sell_Offer, SellOfferDto> _sellAssembler;
@@ -38,7 +37,7 @@ namespace LGSA_Server.Controllers
                                                                     new ProductTypeAssembler()),
                                                   new UserAssembler(new AddressAssembler()));
         }
-        [Authentication.Authentication, HttpsOnly]
+        [Authentication.Authentication]
         [HttpPost, Route("AcceptSellTransaction/")]
         public async Task<IHttpActionResult> AcceptSellTransaction([FromBody] TransactionDto dto)
         {
@@ -67,7 +66,7 @@ namespace LGSA_Server.Controllers
             }
             return Ok();
         }
-        [Authentication.Authentication, HttpsOnly]
+        [Authentication.Authentication]
         [HttpGet]
         public async Task<IHttpActionResult> Get([FromUri] SellOfferFilterDto filter)
         {
@@ -77,7 +76,7 @@ namespace LGSA_Server.Controllers
 
             return Ok(dto);
         }
-        [Authentication.Authentication, HttpsOnly]
+        [Authentication.Authentication]
         [HttpPost]
         public async Task<IHttpActionResult> Post([FromBody] SellOfferDto dto)
         {
@@ -104,7 +103,7 @@ namespace LGSA_Server.Controllers
             dto = _sellAssembler.EntityToDto(offer);
             return Ok(dto);
         }
-        [Authentication.Authentication, HttpsOnly]
+        [Authentication.Authentication]
         [HttpPut]
         public async Task<IHttpActionResult> Put([FromBody] SellOfferDto dto)
         {
@@ -132,7 +131,7 @@ namespace LGSA_Server.Controllers
             dto = _sellAssembler.EntityToDto(offer);
             return Ok(dto);
         }
-        [Authentication.Authentication, HttpsOnly]
+        [Authentication.Authentication]
         [HttpDelete]
         public async Task<IHttpActionResult> Delete([FromBody] SellOfferDto dto)
         {

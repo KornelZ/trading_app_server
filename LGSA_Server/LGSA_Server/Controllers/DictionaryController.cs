@@ -13,7 +13,6 @@ using System.Web.Http;
 
 namespace LGSA_Server.Controllers
 {
-    [Authentication.Authentication]
     public class DictionaryController : ApiController
     {
         private IDictionaryService<dic_condition> _conditionService;
@@ -34,7 +33,7 @@ namespace LGSA_Server.Controllers
             _productTypeAssembler = new ProductTypeAssembler();
         }
 
-        [HttpGet, HttpsOnly]
+        [HttpGet]
         public async Task<IHttpActionResult> Get()
         {
             var conditions = _conditionAssembler.EntityToDto(await _conditionService.GetData(null));

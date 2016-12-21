@@ -21,7 +21,6 @@ using LGSA_Server.Model.Enums;
 
 namespace LGSA_Server.Controllers
 {
-    [Authentication.Authentication]
     public class ProductController : ApiController
     {
         private IDataService<product> _service;
@@ -37,7 +36,7 @@ namespace LGSA_Server.Controllers
 
         }
         // GET: api/Product
-        [Authentication.Authentication, HttpsOnly]
+        [Authentication.Authentication]
         [HttpGet]
         public async Task<IHttpActionResult> Get([FromUri] ProductFilterDto filter)
         {
@@ -47,7 +46,7 @@ namespace LGSA_Server.Controllers
 
             return Ok(dto);
         }
-        [Authentication.Authentication, HttpsOnly]
+        [Authentication.Authentication]
         [HttpPost]
         public async Task<IHttpActionResult> Post([FromBody] ProductDto dto)
         {
@@ -76,7 +75,7 @@ namespace LGSA_Server.Controllers
             dto = _assembler.EntityToDto(product);
             return Ok(dto);
         }
-        [Authentication.Authentication, HttpsOnly]
+        [Authentication.Authentication]
         [HttpPut]
         public async Task<IHttpActionResult> Put([FromBody] ProductDto dto)
         {
