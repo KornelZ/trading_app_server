@@ -283,7 +283,9 @@
     <Content Include="Model\MainDatabaseModel.edmx.diagram">
       <DependentUpon>MainDatabaseModel.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\lgsa2 - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\lgsa2 - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\lgsa2serv - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
