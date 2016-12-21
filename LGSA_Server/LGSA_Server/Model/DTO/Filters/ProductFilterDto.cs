@@ -23,7 +23,10 @@ namespace LGSA_Server.Model.DTO.Filters
         {
             var builder = PredicateBuilder.New<product>();
             builder.And(p => p.product_owner == userId && p.stock >= Stock);
-
+            if(Rating != 0)
+            {
+                builder.And(p => p.rating >= Rating);
+            }
             if(ProductName != null)
             {
                 builder.And(p => p.Name.Contains(ProductName));
