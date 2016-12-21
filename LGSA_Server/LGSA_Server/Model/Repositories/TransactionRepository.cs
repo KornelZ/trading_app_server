@@ -83,18 +83,18 @@ namespace LGSA.Model.Repositories
             }
         }
 
-        public async Task<transactions> GetById(int id)
+        public virtual async Task<transactions> GetById(int id)
         {
             return await _context.Set<transactions>().FindAsync(id);
         }
 
-        public bool Update(transactions entity)
+        public virtual bool Update(transactions entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
             return true;
         }
 
-        public bool Delete(transactions entity)
+        public virtual bool Delete(transactions entity)
         {
             _context.Entry(entity).State = EntityState.Deleted;
             return true;

@@ -80,7 +80,7 @@ namespace LGSA.Model.Repositories
             }
         }
 
-        public bool Delete(buy_Offer entity)
+        public virtual bool Delete(buy_Offer entity)
         {
             _context.Entry(entity).State = EntityState.Deleted;
             return true;

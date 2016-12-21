@@ -76,7 +76,7 @@ namespace LGSA.Model.Repositories
             }
         }
 
-        public bool Delete(users_Authetication entity)
+        public virtual bool Delete(users_Authetication entity)
         {
             _context.Entry(entity).State = EntityState.Deleted;
             return true;
