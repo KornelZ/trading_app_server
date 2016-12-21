@@ -1,5 +1,6 @@
 ﻿using LGSA.Model.Services;
 using LGSA.Model.UnitOfWork;
+using LGSA_Server.Authentication;
 using LGSA_Server.Model;
 using LGSA_Server.Model.Assemblers;
 using LGSA_Server.Model.DTO;
@@ -33,7 +34,7 @@ namespace LGSA_Server.Controllers
             _productTypeAssembler = new ProductTypeAssembler();
         }
 
-        [HttpGet]
+        [HttpGet, HttpsOnly]
         public async Task<IHttpActionResult> Get()
         {
             var conditions = _conditionAssembler.EntityToDto(await _conditionService.GetData(null));

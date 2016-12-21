@@ -38,7 +38,7 @@ namespace LGSA_Server.Controllers
                                                     new UserAssembler(new AddressAssembler()));
             _transactionService = new TransactionService(factory, ratingUpdater);
         }
-        [Authentication.Authentication]
+        [Authentication.Authentication, HttpsOnly]
         [HttpPost, Route("AcceptBuyTransaction/")]
         public async Task<IHttpActionResult> AcceptBuyTransaction([FromBody] TransactionDto dto)
         {
@@ -67,7 +67,7 @@ namespace LGSA_Server.Controllers
             }
             return Ok();
         }
-        [Authentication.Authentication]
+        [Authentication.Authentication, HttpsOnly]
         [HttpGet]
         public async Task<IHttpActionResult> Get([FromUri] BuyOfferFilterDto filter)
         {
@@ -77,7 +77,7 @@ namespace LGSA_Server.Controllers
 
             return Ok(dto);
         }
-        [Authentication.Authentication]
+        [Authentication.Authentication, HttpsOnly]
         [HttpPost]
         public async Task<IHttpActionResult> Post([FromBody] BuyOfferDto dto)
         {
@@ -99,7 +99,7 @@ namespace LGSA_Server.Controllers
             dto = _buyAssembler.EntityToDto(offer);
             return Ok(dto);
         }
-        [Authentication.Authentication]
+        [Authentication.Authentication, HttpsOnly]
         [HttpPut]
         public async Task<IHttpActionResult> Put([FromBody] BuyOfferDto dto)
         {
@@ -123,7 +123,7 @@ namespace LGSA_Server.Controllers
             dto = _buyAssembler.EntityToDto(offer);
             return Ok(dto);
         }
-        [Authentication.Authentication]
+        [Authentication.Authentication, HttpsOnly]
         [HttpDelete]
         public async Task<IHttpActionResult> Delete([FromBody] BuyOfferDto dto)
         {

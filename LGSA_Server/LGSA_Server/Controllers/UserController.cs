@@ -27,7 +27,7 @@ namespace LGSA_Server.Controllers
             _userAssembler = new UserAssembler(new AddressAssembler());
             _assembler = new AuthenticationAssembler(_userAssembler);
         }
-        [Route("Login/"), HttpPost]
+        [Route("Login/"), HttpPost, HttpsOnly]
         public async Task<IHttpActionResult> Login([FromBody] AuthenticationDto dto)
         {
             if (ModelState.IsValid == false)
@@ -44,7 +44,7 @@ namespace LGSA_Server.Controllers
 
             return BadRequest("Wrong username or password");
         }
-        [Authentication.Authentication]
+        [Authentication.Authentication, HttpsOnly]
         [HttpGet]
         public async Task<IHttpActionResult> Get(int id)
         {
@@ -60,7 +60,7 @@ namespace LGSA_Server.Controllers
             return Ok(info);
         }
         //Register
-        [HttpPost]
+        [HttpPost, HttpsOnly]
         public async Task<IHttpActionResult> Post([FromBody] AuthenticationDto dto)
         {
             if (ModelState.IsValid == false)
@@ -79,7 +79,7 @@ namespace LGSA_Server.Controllers
 
             return Ok(dto);
         }
-        [Authentication.Authentication]
+        [Authentication.Authentication, HttpsOnly]
         [HttpPut]
         public async Task<IHttpActionResult> Put([FromBody] AuthenticationDto dto)
         {
